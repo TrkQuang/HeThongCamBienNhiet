@@ -12,11 +12,11 @@ Tính toán trung bình, % tăng, xác định cảnh báo và chuẩn hóa dữ
 
 ## Danh sách file
 
-- **init**.py: Khai báo package, hỗ trợ import.
-- processor.py: Điều phối luồng xử lý dữ liệu.
-- aggregator.py: Gom dữ liệu và tính trung bình.
-- alert_rules.py: Quy tắc cảnh báo theo % tăng.
-- thresholds.py: Ngưỡng cảnh báo và cấu hình liên quan.
+- **init**.py (package): Khai báo package, giúp import các module xử lý.
+- processor.py (service): Điều phối luồng xử lý, gọi aggregator và alert_rules.
+- aggregator.py (service): Gom dữ liệu theo sensor, tính trung bình/rolling.
+- alert_rules.py (rules/service): Áp dụng quy tắc % tăng để tạo cảnh báo.
+- thresholds.py (config/domain): Ngưỡng mặc định và logic đọc cấu hình ngưỡng.
 
 ## Ví dụ sử dụng
 

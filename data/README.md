@@ -11,8 +11,8 @@ Lưu file DB và dữ liệu phát sinh khi chạy.
 
 ## Danh sách file
 
-- README.md: Mô tả mục đích thư mục dữ liệu.
-- temperature.db: File SQLite tạo khi chạy (ví dụ).
+- README.md (doc): Mô tả mục đích thư mục dữ liệu.
+- temperature.db (artifact/db): File SQLite tạo khi chạy (ví dụ).
 
 ## Ví dụ sử dụng
 

@@ -10,7 +10,7 @@ Mã nguồn firmware cho ESP32.
 
 ## Danh sách file
 
-- main.ino: Firmware ESP32 đọc DHT, gửi dữ liệu HTTP.
+- main.ino (firmware): Kết nối Wi-Fi, đọc DHT, tạo payload, gửi HTTP, retry, log Serial.
 
 ## Ví dụ sử dụng
 

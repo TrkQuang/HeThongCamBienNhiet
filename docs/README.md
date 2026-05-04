@@ -13,10 +13,10 @@ Tài liệu kiến trúc, API, hướng dẫn người dùng.
 
 ## Danh sách file
 
-- architecture.md: Mô tả kiến trúc tổng thể.
-- api_spec.md: Đặc tả API và payload.
-- user_guide.md: Hướng dẫn sử dụng hệ thống.
-- troubleshooting.md: Xử lý lỗi thường gặp.
+- architecture.md (doc): Mô tả kiến trúc tổng thể và luồng dữ liệu.
+- api_spec.md (doc): Đặc tả API, endpoint, payload.
+- user_guide.md (doc): Hướng dẫn sử dụng cho người dùng.
+- troubleshooting.md (doc): Các lỗi thường gặp và cách xử lý.
 
 ## Ví dụ sử dụng
 

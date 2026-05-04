@@ -12,9 +12,9 @@ Tách cấu hình khỏi code để dễ chỉnh theo môi trường.
 
 ## Danh sách file
 
-- settings.yaml: Cấu hình ngưỡng, tần suất, URL API.
-- logging.yaml: Cấu hình mức log và format.
-- env.example: Mẫu biến môi trường.
+- settings.yaml (config): Ngưỡng cảnh báo, tần suất gửi/nhận, URL API, DB path.
+- logging.yaml (config): Mức log, format, nơi ghi log.
+- env.example (env template): Mẫu biến môi trường cần thiết.
 
 ## Ví dụ sử dụng
 

@@ -12,10 +12,10 @@ Nhận dữ liệu từ thiết bị qua HTTP REST, kiểm tra payload, trả ph
 
 ## Danh sách file
 
-- **init**.py: Khai báo package, hỗ trợ import.
-- app.py: Tạo Flask app, cấu hình, đăng ký routes.
-- routes.py: Định nghĩa endpoint nhận dữ liệu.
-- schemas.py: Schema/validation payload.
+- **init**.py (package): Khai báo package, giúp import các module API.
+- app.py (app factory): Tạo Flask app, nạp cấu hình, đăng ký routes/blueprint.
+- routes.py (controller): Nhận request, gọi core/database, trả response JSON.
+- schemas.py (schema/model): Định nghĩa schema request/response và validate payload.
 
 ## Ví dụ sử dụng
 

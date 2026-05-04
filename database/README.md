@@ -12,10 +12,10 @@ Quản lý kết nối DB và định nghĩa models cho cảm biến, bản ghi,
 
 ## Danh sách file
 
-- **init**.py: Khai báo package, hỗ trợ import.
-- db.py: Kết nối DB, tạo engine/session.
-- models.py: Định nghĩa bảng (sensor, reading, alert).
-- repository.py: Hàm CRUD và truy vấn dữ liệu.
+- **init**.py (package): Khai báo package, giúp import các module DB.
+- db.py (infrastructure): Tạo engine/session, cấu hình kết nối DB.
+- models.py (model/ORM): Định nghĩa bảng dữ liệu (sensors, devices, readings, alerts).
+- repository.py (repository/service): CRUD và truy vấn theo sensor, thời gian.
 
 ## Ví dụ sử dụng
 

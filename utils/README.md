@@ -13,11 +13,11 @@ Tập hợp các hàm hỗ trợ: đồng bộ thời gian, retry, logging, vali
 
 ## Danh sách file
 
-- **init**.py: Khai báo package, hỗ trợ import.
-- time_sync.py: Chuẩn hóa và đồng bộ timestamp.
-- retry.py: Cơ chế retry/backoff khi lỗi tạm thời.
-- logger.py: Cấu hình logging dùng chung.
-- validators.py: Kiểm tra dữ liệu đầu vào.
+- **init**.py (package): Khai báo package, giúp import các tiện ích.
+- time_sync.py (utility): Chuẩn hóa timestamp, chuyển đổi timezone, kiểm tra lệch thời gian.
+- retry.py (utility): Chính sách retry/backoff khi lỗi tạm thời.
+- logger.py (utility/config): Cấu hình logger dùng chung, format và mức log.
+- validators.py (utility/validation): Kiểm tra dữ liệu đầu vào, range và kiểu dữ liệu.
 
 ## Ví dụ sử dụng
 

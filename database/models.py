@@ -1,39 +1,58 @@
 # database/models.py
-from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey, Text
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from .db import Base
 
-class ThietBi(Base):
-    __tablename__ = "thiet_bi"
+class Device(Base):
+    __tablename__ = "devices"
 
-    id_thiet_bi = Column(Integer, primary_key=True, index=True)
-    ma_cam_bien = Column(String, unique=True, index=True)
-    vi_tri = Column(String)
-    nguong_nhiet_do = Column(Float, default=35.0)
-    ngay_tao = Column(DateTime, default=datetime.utcnow)
+    id = Column(Integer, primary_key=True, index=True)
+    device_code = Column(String, unique=True, index=True)
+    device_type = Column(String)
+    firmware_version = Column(String)
+    last_seen_at = Column(DateTime)
 
-    # Relationship để truy xuất dữ liệu liên kết dễ dàng hơn
-    nhat_ky = relationship("NhatKyNhietDo", back_populates="thiet_bi")
-    canh_bao = relationship("CanhBao", back_populates="thiet_bi")
+    # Quan hệ 1-N: 1 Thiết bị có nhiều Cảm biến
+    sensors = relationship("Sensor", back_populates="device")
 
-class NhatKyNhietDo(Base):
-    __tablename__ = "nhat_ky_nhiet_do"
+class Sensor(Base):
+    __tablename__ = "sensors"
 
-    id_nhat_ky = Column(Integer, primary_key=True, index=True)
-    id_thiet_bi = Column(Integer, ForeignKey("thiet_bi.id_thiet_bi"))
-    nhiet_do = Column(Float)
-    thoi_gian_do = Column(DateTime, default=datetime.utcnow, index=True) # Đã thêm index cho thời gian
+    id = Column(Integer, primary_key=True, index=True)
+    sensor_code = Column(String, unique=True, index=True)
+    name = Column(String)
+    location = Column(String)
+    device_id = Column(Integer, ForeignKey("devices.id"))
+    created_at = Column(DateTime, default=datetime.utcnow)
 
-    thiet_bi = relationship("ThietBi", back_populates="nhat_ky")
+    # các mối quan hệ
+    device = relationship("Device", back_populates="sensors")
+    readings = relationship("Reading", back_populates="sensor")
+    alerts = relationship("Alert", back_populates="sensor")
 
-class CanhBao(Base):
-    __tablename__ = "canh_bao"
+class Reading(Base):
+    __tablename__ = "readings"
 
-    id_canh_bao = Column(Integer, primary_key=True, index=True)
-    id_thiet_bi = Column(Integer, ForeignKey("thiet_bi.id_thiet_bi"))
-    loai_canh_bao = Column(String)
-    noi_dung = Column(String)
-    thoi_gian_canh_bao = Column(DateTime, default=datetime.utcnow)
+    id = Column(Integer, primary_key=True, index=True)
+    sensor_id = Column(Integer, ForeignKey("sensors.id"), index=True) #index cho sensor_id để tối ưu truy vấn theo cảm biến
+    temperature = Column(Float)
+    humidity = Column(Float, nullable=True) # Có thể null nếu chỉ đo nhiệt độ
+    device_ts = Column(DateTime)
+    server_ts = Column(DateTime, default=datetime.utcnow, index=True) #index cho server_ts để tối ưu truy vấn theo thời gian
 
-    thiet_bi = relationship("ThietBi", back_populates="canh_bao")
+    sensor = relationship("Sensor", back_populates="readings")
+
+class Alert(Base):
+    __tablename__ = "alerts"
+
+    id = Column(Integer, primary_key=True, index=True)
+    sensor_id = Column(Integer, ForeignKey("sensors.id"))
+    avg_temp = Column(Float)
+    current_temp = Column(Float)
+    percent_increase = Column(Float)
+    threshold = Column(Float)
+    level = Column(String) # VD: 'warning', 'high'
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    sensor = relationship("Sensor", back_populates="alerts")

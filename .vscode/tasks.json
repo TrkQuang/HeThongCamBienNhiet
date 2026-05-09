@@ -1,0 +1,35 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Arduino: Compile ESP8266",
+            "type": "shell",
+            "command": "C:\\Users\\Admin\\AppData\\Local\\Programs\\Arduino IDE\\resources\\app\\lib\\backend\\resources\\arduino-cli.exe",
+            "args": [
+                "compile",
+                "--fqbn",
+                "esp8266:esp8266:nodemcuv2",
+                "D:\\code\\2hk3\\HeThongCamBienNhiet\\iot\\esp8266\\main"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Arduino: Upload ESP8266 COM9",
+            "type": "shell",
+            "command": "C:\\Users\\Admin\\AppData\\Local\\Programs\\Arduino IDE\\resources\\app\\lib\\backend\\resources\\arduino-cli.exe",
+            "args": [
+                "upload",
+                "--fqbn",
+                "esp8266:esp8266:nodemcuv2",
+                "--port",
+                "COM9",
+                "D:\\code\\2hk3\\HeThongCamBienNhiet\\iot\\esp8266\\main"
+            ],
+            "problemMatcher": []
+        }
+    ]
+}

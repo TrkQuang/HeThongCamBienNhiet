@@ -1,80 +1,46 @@
 #include <ESP8266WiFi.h>
 #include <time.h>
+//================THÔNG TIN WIFI===============
+const char* ten_wifi="Nguyễn Đình Chương";
+const char* pass_wifi="11111111";
+//================THỜI GIAN ĐO================
+unsigned long thoi_gian_bat_dau=0;
+const long thoi_gian_do=5000; 
+//===============SETUP========================
+const long id_chip=ESP.getChipId();
 
-// ================= CẤU HÌNH WI-FI =================
-const char* ssid = "Nguyễn Đình Chương";      // Đổi thành tên Wi-Fi nhà bạn
-const char* password = "11111111";  // Đổi thành mật khẩu Wi-Fi
-
-// ================= CẤU HÌNH THỜI GIAN ĐO =================
-unsigned long previousMillis = 0;
-// 300000 mili-giây = 5 phút. 
-// Tạm thời tui để 10000 (10 giây) để bạn test cho lẹ, khi báo cáo thì đổi lại 300000
-const long interval = 10000; 
-
-// ================= SETUP (Chạy 1 lần) =================
-void setup() {
+void setup(){
   Serial.begin(115200);
-  Serial.println("\n--- KHOI DONG HE THONG ---");
-
-  // 1. Kết nối Wi-Fi
-  WiFi.begin(ssid, password);
-  Serial.print("Dang ket noi Wi-Fi");
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
+  Serial.print("ID Chip: ");
+  Serial.println(id_chip);
+  WiFi.begin(ten_wifi,pass_wifi); //kết nối wifi
+  Serial.print("ĐANG KẾT NỐI WIFI");
+  configTime(7 * 3600, 0, "pool.ntp.org", "time.nist.gov"); // UTC+7
+  long temp=0;
+  delay(3000); 
+  while (WiFi.status()!=WL_CONNECTED){
+    delay(1000);
+    if(millis()-temp>=2000){
+    temp=millis();
+    Serial.println("ERO: CHƯA KẾT NỐI ĐƯỢC WIFI");
+    }
   }
-  Serial.println("\nKet noi thanh cong! IP: " + WiFi.localIP().toString());
+  Serial.println("KẾT NỐI THÀNH CÔNG");
 
-  // 2. Cấu hình lấy giờ từ Internet (NTP)
-  // 7 * 3600 là bù giờ UTC+7 cho múi giờ Việt Nam
-  configTime(7 * 3600, 0, "pool.ntp.org", "time.nist.gov");
-  Serial.println("Dang dong bo thoi gian...");
-  delay(2000); // Chờ 2 giây để mạch kịp tải giờ về
 }
+void loop(){
+  unsigned long thoi_gian_hien_tai=millis();//lấy thời gian hiện tại
 
-// ================= LOOP (Chạy lặp lại liên tục) =================
-void loop() {
-  // Lấy thời gian hiện tại của mạch (tính bằng mili-giây)
-  unsigned long currentMillis = millis();
+  float nhiet_do=random(280, 350)/10.0; //giả sử nhiệt độ là ramdom 
+  float do_am=random(400, 800)/10.0; //giả sử độ ẩm là random
 
-  // Kiểm tra xem đã trôi qua đủ thời gian cài đặt chưa (5 phút / 10 giây)
-  if (currentMillis - previousMillis >= interval) {
-    // Lưu lại cột mốc thời gian mới
-    previousMillis = currentMillis;
+//chuỗi database để lưu trữ dữ liệu
+  String du_lieu=String(id_chip)+","+String(nhiet_do)+","+String(do_am)+","+time(NULL);//thời gian xuất ra chỉ ở dạng timestamp
+
+  if(thoi_gian_hien_tai-thoi_gian_bat_dau>=thoi_gian_do){
+    Serial.println("ĐANG ĐO NHIỆT ĐỘ");
+    Serial.println(du_lieu);
     
-    // Gọi hàm đo và gửi dữ liệu
-    doVaGuiDuLieu();
+    thoi_gian_bat_dau=thoi_gian_hien_tai;
   }
-
-  // Khúc này mạch vẫn "rảnh rỗi" chạy liên tục, sau này sẽ chèn code "Lắng nghe yêu cầu đo đột xuất" vào đây
-}
-
-// ================= HÀM XỬ LÝ DỮ LIỆU =================
-void doVaGuiDuLieu() {
-  // 1. Tạo dữ liệu giả lập (Vì chưa có DHT11)
-  // Random nhiệt độ từ 28.0 đến 35.0, độ ẩm từ 60.0 đến 80.0
-  float nhiet_do = random(280, 350) / 10.0; 
-  float do_am = random(600, 800) / 10.0;
-
-  // 2. Lấy giờ thực tế (Timestamp)
-  time_t now = time(nullptr);
-  struct tm* timeinfo = localtime(&now);
-  char timeString[20];
-  // Định dạng giờ: Năm-Tháng-Ngày Giờ:Phút:Giây
-  strftime(timeString, sizeof(timeString), "%Y-%m-%d %H:%M:%S", timeinfo);
-
-  // 3. Lấy ID duy nhất của mạch ESP8266
-  String chipId = String(ESP.getChipId());
-
-  // 4. Đóng gói tất cả thành chuỗi JSON
-  String payload = "{";
-  payload += "\"esp_id\":\"" + chipId + "\",";
-  payload += "\"sensor_type\":\"DHT11\",";
-  payload += "\"temperature\":" + String(nhiet_do, 1) + ",";
-  payload += "\"humidity\":" + String(do_am, 1) + ",";
-  payload += "\"timestamp\":\"" + String(timeString) + "\"";
-  payload += "}";
-
-  // 5. In ra Serial Monitor để kiểm tra trước (Sau này thay bằng lệnh gửi qua mạng)
-  Serial.println("Ban tin moi: " + payload);
 }

@@ -5,8 +5,11 @@
 - Thiết bị: ESP8266/ESP32 + DHT11/DHT22
 - Giao tiếp: HTTP REST (JSON)
 - Backend: Python 3.11+ + Flask
-- UI desktop: Tkinter hoặc PyQt
+- UI desktop: Tkinter (hoặc PyQt)
 - Database: SQLite (có thể mở rộng MySQL/PostgreSQL)
+- ORM: SQLAlchemy (nếu dùng)
+- Logging: logging chuẩn của Python
+- Cấu hình môi trường: python-dotenv (nếu dùng)
 
 ## Lưu ý kỹ thuật
 

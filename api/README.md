@@ -10,6 +10,13 @@ Nhận dữ liệu từ thiết bị qua HTTP REST, kiểm tra payload, trả ph
 - Định nghĩa route nhận dữ liệu
 - Schema/validation payload
 
+## Schema 
+✔ DuLieuNhietVao → ESP gửi lên
+✔ DuLieuNhietRa → API trả về / UI hiển thị
+✔ ApiResponse → trả OK / success
+✔ ErrorResponse → trả lỗi API
+✔ AlertOut → cảnh báo nhiệt độ
+
 ## Danh sách file
 
 - **init**.py (package): Khai báo package, giúp import các module API.
@@ -20,3 +27,5 @@ Nhận dữ liệu từ thiết bị qua HTTP REST, kiểm tra payload, trả ph
 ## Ví dụ sử dụng
 
 POST /api/temperature với JSON gồm sensor_id, temp, ts.
+
+

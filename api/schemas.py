@@ -22,6 +22,7 @@ class DuLieuNhietRa(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 
     cam_bien_id: str = Field(alias="sensor_id")
+    thiet_bi_id: str = Field(alias="device_id")
     nhiet_do: float = Field(alias="temp")
     do_am: Optional[float] = Field(default=None, alias="humidity")
     thoi_gian_thiet_bi: Optional[datetime] = Field(default=None, alias="ts")

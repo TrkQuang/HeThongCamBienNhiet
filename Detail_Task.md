@@ -27,6 +27,7 @@
 - config/logging.yaml
 - core/processor.py
 - core/**init**.py
+- utils/ai_client.py
 - utils/validators.py
 
 ## Nguyễn Đình Chương - Data + Xử lý
@@ -43,7 +44,7 @@
 - utils/time_sync.py
 - utils/retry.py
 - utils/logger.py
-- utils/ai_client.py
+
 - config/settings.yaml
 
 ## Nguyễn Như Quỳnh - Desktop UI

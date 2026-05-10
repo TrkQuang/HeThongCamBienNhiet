@@ -17,6 +17,7 @@ Tính toán trung bình, % tăng, xác định cảnh báo và chuẩn hóa dữ
 - aggregator.py (service): Gom dữ liệu theo sensor, tính trung bình/rolling.
 - alert_rules.py (rules/service): Áp dụng quy tắc % tăng để tạo cảnh báo.
 - thresholds.py (config/domain): Ngưỡng mặc định và logic đọc cấu hình ngưỡng.
+- ai_suggester.py (service): Gọi AI để gợi ý cách hạ nhiệt.
 
 ## Ví dụ sử dụng
 

@@ -2,7 +2,7 @@
 
 ## Mục đích
 
-Quản lý kết nối DB và định nghĩa models cho cảm biến, bản ghi, cảnh báo.
+Quản lý kết nối DB và định nghĩa models cho dữ liệu nhiệt, cảnh báo.
 
 ## Chứa gì
 
@@ -14,8 +14,8 @@ Quản lý kết nối DB và định nghĩa models cho cảm biến, bản ghi,
 
 - **init**.py (package): Khai báo package, giúp import các module DB.
 - db.py (infrastructure): Tạo engine/session, cấu hình kết nối DB.
-- models.py (model/ORM): Định nghĩa bảng dữ liệu (cam_bien, thiet_bi, du_lieu_nhiet, canh_bao).
-- repository.py (repository/service): CRUD và truy vấn theo cam_bien, thời gian.
+- models.py (model/ORM): Định nghĩa bảng dữ liệu (du_lieu_nhiet, canh_bao).
+- repository.py (repository/service): CRUD và truy vấn theo sensor_id, thời gian.
 
 ## Ví dụ sử dụng
 

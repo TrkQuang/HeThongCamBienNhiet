@@ -42,6 +42,8 @@
 - Gọi core/processor để xử lý logic, sau đó lưu DB qua repository.
 - Trả về phản hồi (status + message) rõ ràng, nhất quán cho client.
 - Quản lý cấu hình môi trường và logging cho API.
+- Cấu hình AI API (AI_API_URL/AI_API_KEY/AI_TIMEOUT) để gọi gợi ý hạ nhiệt.
+- Phối hợp với core để trả kèm gợi ý AI trong response khi có cảnh báo.
 - Test API bằng Postman/curl, ghi lại ví dụ request/response.
 - Đảm bảo API chịu tải gửi liên tục (rate ổn định, không rớt request).
 - Phạm vi chính: tầng API + core/processor, không thiết kế DB.

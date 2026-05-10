@@ -38,10 +38,12 @@
 - core/aggregator.py
 - core/alert_rules.py
 - core/thresholds.py
+- core/ai_suggester.py
 - utils/**init**.py
 - utils/time_sync.py
 - utils/retry.py
 - utils/logger.py
+- utils/ai_client.py
 - config/settings.yaml
 
 ## Nguyễn Như Quỳnh - Desktop UI

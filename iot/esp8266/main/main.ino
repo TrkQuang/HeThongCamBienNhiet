@@ -1,6 +1,15 @@
 #include <ESP8266WiFi.h>
 #include <time.h>
+#include <FirebaseESP8266.h>
 #include "DHT.h"
+//================SETUP DATABASE==============
+#define firebase_host "hethongcambiennhiet-default-rtdb.asia-southeast1.firebasedatabase.app"
+#define firebase_auth "FxnWmxRtKDz7XxEIFz3MdozuXusXm0WIywInlKjT"
+FirebaseData firebaseData;
+FirebaseConfig config;
+FirebaseAuth auth;
+
+//================CẤU HÌNH NHIỆT ĐỘ DHT11=====
 #define DHTPIN 2
 #define DHTTYPE DHT11
 DHT dht(DHTPIN, DHTTYPE);
@@ -9,7 +18,7 @@ const char* ten_wifi="Nguyễn Đình Chương";
 const char* pass_wifi="11111111";
 //================THỜI GIAN ĐO================
 unsigned long thoi_gian_bat_dau=0;
-const long thoi_gian_do=5000; 
+const long thoi_gian_do=300000; 
 //===============SETUP========================
 const long id_chip=ESP.getChipId();
 
@@ -32,6 +41,11 @@ void setup(){
   }
   Serial.println("KẾT NỐI THÀNH CÔNG");
 
+    //cấu hình firebase
+    config.host = firebase_host;
+    config.signer.tokens.legacy_token = firebase_auth;
+  Firebase.begin(&config, &auth);
+  Firebase.reconnectWiFi(true);
 }
 void loop(){
   unsigned long thoi_gian_hien_tai=millis();//lấy thời gian hiện tại
@@ -46,5 +60,16 @@ void loop(){
     Serial.println(du_lieu);
     
     thoi_gian_bat_dau=thoi_gian_hien_tai;
+    FirebaseJson jsonData;
+    jsonData.set("dữ liệu", du_lieu);
+    //gửi dữ liệu lên firebase
+    String path = "/dht11/" + String(id_chip) ; // Đường dẫn lưu trữ dữ liệu
+      if (Firebase.pushJSON(firebaseData, path, jsonData)) {
+        Serial.println("-> GỬI FIREBASE THÀNH CÔNG!");
+        Serial.println("--------------------");
+      } else {
+        Serial.println("-> LỖI GỬI: " + firebaseData.errorReason());
+        Serial.println("--------------------");
+      }
   }
-}
+  }

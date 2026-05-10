@@ -1,5 +1,9 @@
 #include <ESP8266WiFi.h>
 #include <time.h>
+#include "DHT.h"
+#define DHTPIN 2
+#define DHTTYPE DHT11
+DHT dht(DHTPIN, DHTTYPE);
 //================THÔNG TIN WIFI===============
 const char* ten_wifi="Nguyễn Đình Chương";
 const char* pass_wifi="11111111";
@@ -11,6 +15,7 @@ const long id_chip=ESP.getChipId();
 
 void setup(){
   Serial.begin(115200);
+  dht.begin();
   Serial.print("ID Chip: ");
   Serial.println(id_chip);
   WiFi.begin(ten_wifi,pass_wifi); //kết nối wifi
@@ -31,14 +36,13 @@ void setup(){
 void loop(){
   unsigned long thoi_gian_hien_tai=millis();//lấy thời gian hiện tại
 
-  float nhiet_do=random(280, 350)/10.0; //giả sử nhiệt độ là ramdom 
-  float do_am=random(400, 800)/10.0; //giả sử độ ẩm là random
+  float nhiet_do=dht.readTemperature(); 
+  float do_am=dht.readHumidity();
 
 //chuỗi database để lưu trữ dữ liệu
   String du_lieu=String(id_chip)+","+String(nhiet_do)+","+String(do_am)+","+time(NULL);//thời gian xuất ra chỉ ở dạng timestamp
 
   if(thoi_gian_hien_tai-thoi_gian_bat_dau>=thoi_gian_do){
-    Serial.println("ĐANG ĐO NHIỆT ĐỘ");
     Serial.println(du_lieu);
     
     thoi_gian_bat_dau=thoi_gian_hien_tai;

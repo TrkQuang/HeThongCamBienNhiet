@@ -27,8 +27,10 @@ class Dashboard:
 
         left = tk.Frame(main, bg='#f2f2f2')
         left.grid(row=0, column=0, sticky="nsew", padx=20, pady=20)
-
         right = tk.Frame(main, bg='#f2f2f2')
+        right.rowconfigure(0, weight=0)
+        right.rowconfigure(1, weight=0)
+        right.rowconfigure(2, weight=1)  
         right.grid(row=0, column=1, sticky="nsew", padx=20, pady=20)
         
         tk.Label(left, text="Nhiệt độ hiện tại", font=("Arial", 16), bg='#f2f2f2').pack(anchor='n')
@@ -42,7 +44,10 @@ class Dashboard:
         sizes = [30, 36, 32, 28]
         
         #thong ke
-        tk.Label(right, text="Thống kê nhiệt độ trong ngày", font=("Arial", 14, "bold"), bg='#f2f2f2').pack(pady=(0, 5), anchor='n')
+        tk.Label(right,
+         text="Thống kê nhiệt độ trong ngày",
+         font=("Arial", 14, "bold"),
+         bg='#f2f2f2').grid(row=0, column=0, sticky="n", pady=(0,10))
         
         #tạo figure
         fig = Figure(figsize=(4, 4), dpi=100)
@@ -55,9 +60,9 @@ class Dashboard:
         
         #nhúng vào Tkinter
         canvas = FigureCanvasTkAgg(fig, master=right)
-        fig.tight_layout()
+        fig.subplots_adjust(top=1.2)
         canvas.draw()
-        canvas.get_tk_widget().pack(anchor='n')
+        canvas.get_tk_widget().grid(row=1, column=0, sticky="n")
         
     def update_temp(self, value):
         self.temp_label.config(text=f"{value}°C")

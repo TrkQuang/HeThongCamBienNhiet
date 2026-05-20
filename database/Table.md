@@ -4,7 +4,7 @@
 
 Liệt kê các bảng cần tạo cho hệ thống giám sát nhiệt độ đa điểm.
 
-## 1) Bảng `DuLieuNhiet`
+## 1) Bảng `DuLieuNhiet` (Reading)
 
 Dữ liệu nhiệt độ theo thời gian.
 
@@ -18,7 +18,9 @@ Dữ liệu nhiệt độ theo thời gian.
 | thoi_gian_thiet_bi | DATETIME     | Timestamp từ thiết bị         |
 | thoi_gian_server   | DATETIME     | Timestamp ghi nhận tại server |
 
-## 2) Bảng `CanhBao`
+Index: sensor_id + thoi_gian_server
+
+## 2) Bảng `CanhBao` (Alert)
 
 Bảng lưu cảnh báo theo quy tắc % tăng.
 

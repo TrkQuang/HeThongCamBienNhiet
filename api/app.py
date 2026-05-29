@@ -6,6 +6,7 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 
 from .routes import nhom_api
+from database.db import init_db
 
 
 def _cau_hinh_logging() -> None:
@@ -30,6 +31,7 @@ def create_app() -> Flask:
 
 	CORS(ung_dung)  # Cho phép gọi API từ UI desktop
 	_cau_hinh_logging()
+	init_db()  # Đảm bảo DB được khởi tạo trước khi nhận request
 	ung_dung.register_blueprint(nhom_api)  # Đăng ký routes API
 	return ung_dung
 

@@ -3,12 +3,14 @@ from datetime import datetime, timezone
 from flask import Blueprint, request, jsonify
 from pydantic import ValidationError
 
-from .schemas import DuLieuNhietVao, ApiResponse, ErrorResponse
+from .schemas import DuLieuNhietVao, DuLieuNhietRa, AlertOut, ApiResponse, ErrorResponse
 from core.processor import xu_ly_du_lieu
+from database.db import SessionLocal
+from database.repository import get_recent_readings, get_alerts
+from utils.logger import logger
 from utils.validators import kiem_tra_du_lieu
 
 nhom_api = Blueprint("api", __name__)
-du_lieu_tam: list[dict] = []  # Lưu tạm dữ liệu gần nhất để demo
 
 
 def _lay_json() -> dict:
@@ -39,16 +41,28 @@ def nhan_du_lieu_nhiet():
         )
         return jsonify(phan_hoi.model_dump(by_alias=True)), 422
 
-    du_lieu_ra = xu_ly_du_lieu(du_lieu_vao)  # Gọi core xử lý
-    du_lieu_tam.append(du_lieu_ra.model_dump(by_alias=True))
+    db = SessionLocal()
+    try:
+        du_lieu_ra, alert_out = xu_ly_du_lieu(du_lieu_vao, db)  # Gọi core xử lý
+    except Exception as loi:
+        logger.exception("Loi xu ly du lieu: %s", loi)
+        phan_hoi = ErrorResponse(
+            trang_thai="error",
+            thong_diep="Loi xu ly du lieu",
+            loi=[{"message": str(loi)}],
+        )
+        return jsonify(phan_hoi.model_dump(by_alias=True)), 500
+    finally:
+        db.close()
 
-    if len(du_lieu_tam) > 1000:
-        du_lieu_tam.pop(0)  # Giữ bộ nhớ ổn định
+    payload: dict = {"item": du_lieu_ra.model_dump(by_alias=True)}
+    if alert_out is not None:
+        payload["alert"] = alert_out.model_dump(by_alias=True)
 
     phan_hoi = ApiResponse(
         trang_thai="success",
-        thong_diep="Đã nhận dữ liệu",
-        du_lieu={"item": du_lieu_ra.model_dump(by_alias=True)},
+        thong_diep="Da nhan du lieu",
+        du_lieu=payload,
     )
     return jsonify(phan_hoi.model_dump(by_alias=True)), 201
 
@@ -56,10 +70,68 @@ def nhan_du_lieu_nhiet():
 @nhom_api.route("/api/du-lieu-nhiet", methods=["GET"])
 def lay_du_lieu_nhiet():
     """Lấy danh sách dữ liệu gần nhất."""
+    sensor_id = request.args.get("sensor_id")
+    try:
+        limit = int(request.args.get("limit", "50"))
+    except ValueError:
+        limit = 50
+
+    db = SessionLocal()
+    try:
+        danh_sach = get_recent_readings(db, sensor_id=sensor_id, limit=limit)
+        items = [
+            DuLieuNhietRa(
+                cam_bien_id=item.sensor_id,
+                thiet_bi_id=item.device_id,
+                nhiet_do=item.nhiet_do,
+                do_am=item.do_am,
+                thoi_gian_thiet_bi=item.thoi_gian_thiet_bi,
+                thoi_gian_server=item.thoi_gian_server,
+            ).model_dump(by_alias=True)
+            for item in danh_sach
+        ]
+    finally:
+        db.close()
+
     phan_hoi = ApiResponse(
         trang_thai="success",
         thong_diep="OK",
-        du_lieu={"items": du_lieu_tam[-50:]},
+        du_lieu={"items": items},
+    )
+    return jsonify(phan_hoi.model_dump(by_alias=True)), 200
+
+
+@nhom_api.route("/api/canh-bao", methods=["GET"])
+def lay_canh_bao():
+    """Lấy danh sách cảnh báo gần nhất."""
+    sensor_id = request.args.get("sensor_id")
+    try:
+        limit = int(request.args.get("limit", "50"))
+    except ValueError:
+        limit = 50
+
+    db = SessionLocal()
+    try:
+        danh_sach = get_alerts(db, sensor_id=sensor_id, limit=limit)
+        items = [
+            AlertOut(
+                cam_bien_id=item.sensor_id,
+                nhiet_do_tb=item.nhiet_do_tb,
+                nhiet_do_hien_tai=item.nhiet_do_hien_tai,
+                phan_tram_tang=item.phan_tram_tang,
+                nguong_tang=item.nguong,
+                muc_do=item.muc_do,
+                thoi_gian_tao=item.tao_luc,
+            ).model_dump(by_alias=True)
+            for item in danh_sach
+        ]
+    finally:
+        db.close()
+
+    phan_hoi = ApiResponse(
+        trang_thai="success",
+        thong_diep="OK",
+        du_lieu={"items": items},
     )
     return jsonify(phan_hoi.model_dump(by_alias=True)), 200
 

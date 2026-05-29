@@ -6,7 +6,7 @@ from .models import Reading, Alert
 from datetime import datetime
 from typing import List, Optional
 
-def save_reading(db: Session, sensor_id: str, device_id: str, temp: float, humidity: Optional[float], device_ts: datetime) -> Reading:
+def save_reading(db: Session, sensor_id: str, device_id: str, temp: float, humidity: Optional[float], device_ts: Optional[datetime]) -> Reading:
     reading = Reading(
         sensor_id=sensor_id,
         device_id=device_id,
@@ -19,9 +19,11 @@ def save_reading(db: Session, sensor_id: str, device_id: str, temp: float, humid
     db.refresh(reading)
     return reading
 
-def get_recent_readings(db: Session, sensor_id: str, limit: int = 100) -> List[Reading]:
-    return db.query(Reading).filter(Reading.sensor_id == sensor_id)\
-        .order_by(Reading.thoi_gian_server.desc()).limit(limit).all()
+def get_recent_readings(db: Session, sensor_id: Optional[str] = None, limit: int = 100) -> List[Reading]:
+    q = db.query(Reading)
+    if sensor_id:
+        q = q.filter(Reading.sensor_id == sensor_id)
+    return q.order_by(Reading.thoi_gian_server.desc()).limit(limit).all()
 
 def save_alert(db: Session, sensor_id: str, avg_temp: float, current_temp: float,
                percent: float, threshold: float, level: str) -> Alert:

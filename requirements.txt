@@ -5,6 +5,7 @@ pydantic>=2.6
 sqlalchemy>=2.0
 python-dotenv>=1.0
 requests>=2.31
+pyyaml>=6.0
 
 # UI (chon 1)
 # Tkinter da co san trong Python (Windows) - SU DUNG TKINTER

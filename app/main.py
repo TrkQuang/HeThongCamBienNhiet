@@ -17,5 +17,9 @@ def chay_ung_dung():
     cua_so_chinh.mainloop()
 
 
+<<<<<<< HEAD
 if __name__ == "__main__":
     chay_ung_dung()
+=======
+root.mainloop()
+>>>>>>> e3bd3e95ff4fe7e0c6a94614528049f56ad51bd0

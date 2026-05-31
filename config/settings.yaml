@@ -1,0 +1,15 @@
+# config/settings.yaml
+database:
+  url: "sqlite:///temperature.db"
+
+alert:
+  threshold_percent: 10.0
+  level_warning: "warning"
+  level_high: "high"
+
+api:
+  host: "0.0.0.0"
+  port: 5000
+
+iot:
+  send_interval_seconds: 5

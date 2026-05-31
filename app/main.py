@@ -1,12 +1,21 @@
-import tkinter as tk
-from dashboard_view import Dashboard
+"""
+Chương trình chính cho Hệ Thống Quản Lý Nhiệt Độ
+"""
 
-root = tk.Tk()
-root.title("Dashboard")
-root.geometry("900x500")
+import customtkinter as ctk
+from dashboard_view_modern import BangDieuKhienNhietDo
 
-app = Dashboard(root)
+def chay_ung_dung():
+    """Hàm chính để chạy ứng dụng"""
+    # Tạo cửa sổ chính
+    cua_so_chinh = ctk.CTk()
+    
+    # Tạo bảng điều khiển
+    bang_dieu_khien = BangDieuKhienNhietDo(cua_so_chinh)
+    
+    # Chạy vòng lặp sự kiện
+    cua_so_chinh.mainloop()
 
-app.update_temp(28)
 
-root.mainloop()
+if __name__ == "__main__":
+    chay_ung_dung()

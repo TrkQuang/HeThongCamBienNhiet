@@ -8,9 +8,10 @@ requests>=2.31
 
 # UI (chon 1)
 # Tkinter da co san trong Python (Windows) - SU DUNG TKINTER
+customtkinter>=5.2
 # PyQt5>=5.15
 # PySide6>=6.6
 
 # Bieu do (tuy chon)
-# matplotlib>=3.8
+matplotlib>=3.8
 # pyqtgraph>=0.13

@@ -1,12 +1,12 @@
 import logging
 import os
 
-from flask import Flask
-from flask_cors import CORS
 from dotenv import load_dotenv
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+import uvicorn
 
-from .routes import nhom_api
-from database.db import init_db
+from .routes import router
 
 
 def _cau_hinh_logging() -> None:
@@ -23,22 +23,28 @@ def _cau_hinh_logging() -> None:
 		logging.basicConfig(level=muc)  # Fallback khi thiếu PyYAML hoặc file log
 
 
-def create_app() -> Flask:
-	"""Tạo và cấu hình Flask app."""
+def create_app() -> FastAPI:
+	"""Tạo và cấu hình FastAPI app."""
 	load_dotenv()  # Đọc biến môi trường từ .env nếu có
-	ung_dung = Flask(__name__)
-	ung_dung.config["JSON_AS_ASCII"] = False  # Cho phép tiếng Việt có dấu trong JSON
-
-	CORS(ung_dung)  # Cho phép gọi API từ UI desktop
 	_cau_hinh_logging()
-	init_db()  # Đảm bảo DB được khởi tạo trước khi nhận request
-	ung_dung.register_blueprint(nhom_api)  # Đăng ký routes API
+
+	ung_dung = FastAPI(title="HeThongCamBienNhiet API")
+	ung_dung.add_middleware(
+		CORSMiddleware,
+		allow_origins=["*"],
+		allow_methods=["*"],
+		allow_headers=["*"],
+	)
+
+	ung_dung.include_router(router)
 	return ung_dung
 
 
+app = create_app()
+
+
 if __name__ == "__main__":
-	ung_dung = create_app()
 	dia_chi = os.getenv("API_HOST", "0.0.0.0")
 	cong = int(os.getenv("API_PORT", "5000"))
 	che_do_debug = os.getenv("API_DEBUG", "true").lower() == "true"
-	ung_dung.run(host=dia_chi, port=cong, debug=che_do_debug)  # Chạy server cho môi trường phát triển
+	uvicorn.run("api.app:app", host=dia_chi, port=cong, reload=che_do_debug)

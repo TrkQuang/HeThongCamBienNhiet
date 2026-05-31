@@ -18,7 +18,7 @@ const long thoi_gian_do=300000;
 //===============SETUP========================
 const long id_chip=ESP.getChipId();
 //===============KẾT NỐi VỚI PAYLOAD==========
-String serverName = "http://192.168.1.3:8000/validate_payload"; 
+String serverName = "http://192.168.1.3:5000/api/du-lieu-nhiet"; 
 
 void setup(){
   Serial.begin(115200);
@@ -74,8 +74,8 @@ void loop(){
     strftime(timeStringBuff, sizeof(timeStringBuff), "%Y-%m-%dT%H:%M:%S", timeinfo);
     String thoi_gian_chuan = String(timeStringBuff);
 
-    // 2. ĐÓNG GÓI JSON CHO KHỚP VỚI KHUÔN FASTAPI
-    String payload = "{\"sensor_id\":\"" + String(id_chip) + "\",\"temperature\":" + String(nhiet_do) + ",\"humidity\":" + String(do_am) + ",\"timestamp\":\"" + thoi_gian_chuan + "\"}";
+    // 2. ĐÓNG GÓI JSON CHO KHỚP VỚI KHUÔN FLASK
+    String payload = "{\"sensor_id\":\"" + String(id_chip) + "\",\"device_id\":\"ESP8266-" + String(id_chip) + "\",\"temp\":" + String(nhiet_do) + ",\"humidity\":" + String(do_am) + ",\"ts\":\"" + thoi_gian_chuan + "\"}";
     
     Serial.println("Chuẩn bị bắn hàng: " + payload);
 

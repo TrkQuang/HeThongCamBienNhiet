@@ -13,3 +13,7 @@ api:
 
 iot:
   send_interval_seconds: 5
+
+firebase:
+  credentials_path: "iot/key_firebase_HeThongNhiet.json"
+  database_url: "https://hethongcambiennhiet-default-rtdb.asia-southeast1.firebasedatabase.app/"

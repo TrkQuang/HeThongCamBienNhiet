@@ -1,37 +1,22 @@
 from datetime import datetime, timezone
+from typing import Optional
 
-from flask import Blueprint, request, jsonify
-from pydantic import ValidationError
+from fastapi import APIRouter, status
+from fastapi.responses import JSONResponse
 
-from .schemas import DuLieuNhietVao, DuLieuNhietRa, AlertOut, ApiResponse, ErrorResponse
-from core.processor import xu_ly_du_lieu
-from database.db import SessionLocal
-from database.repository import get_recent_readings, get_alerts
+from .schemas import AlertOut, ApiResponse, DuLieuNhietRa, DuLieuNhietVao, ErrorResponse
+from core.aggregator import tinh_trung_binh, xu_ly_canh_bao
+from core.thresholds import NGUONG_CANH_BAO
+from utils.firebase_store import get_recent_alerts, get_recent_readings, save_alert, save_reading
 from utils.logger import logger
 from utils.validators import kiem_tra_du_lieu
 
-nhom_api = Blueprint("api", __name__)
+router = APIRouter()
 
 
-def _lay_json() -> dict:
-    """Lấy JSON từ request, trả về dict rỗng nếu không có."""
-    return request.get_json(silent=True) or {}
-
-
-@nhom_api.route("/api/du-lieu-nhiet", methods=["POST"])
-def nhan_du_lieu_nhiet():
+@router.post("/api/du-lieu-nhiet")
+def nhan_du_lieu_nhiet(du_lieu_vao: DuLieuNhietVao):
     """Nhận dữ liệu nhiệt từ thiết bị."""
-    du_lieu_json = _lay_json()  # Dữ liệu JSON từ client
-    try:
-        du_lieu_vao = DuLieuNhietVao.model_validate(du_lieu_json)
-    except ValidationError as loi:
-        phan_hoi = ErrorResponse(
-            trang_thai="error",
-            thong_diep="Payload không hợp lệ",
-            loi=loi.errors(),
-        )
-        return jsonify(phan_hoi.model_dump(by_alias=True)), 422
-
     hop_le, danh_sach_loi = kiem_tra_du_lieu(du_lieu_vao)
     if not hop_le:
         phan_hoi = ErrorResponse(
@@ -39,104 +24,115 @@ def nhan_du_lieu_nhiet():
             thong_diep="Dữ liệu không hợp lệ",
             loi=danh_sach_loi,
         )
-        return jsonify(phan_hoi.model_dump(by_alias=True)), 422
+        return JSONResponse(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, content=phan_hoi.model_dump(by_alias=True))
 
-    db = SessionLocal()
+    thoi_gian_server = datetime.now(timezone.utc)
+    du_lieu_ra = DuLieuNhietRa(
+        cam_bien_id=du_lieu_vao.cam_bien_id,
+        thiet_bi_id=du_lieu_vao.thiet_bi_id,
+        nhiet_do=du_lieu_vao.nhiet_do,
+        do_am=du_lieu_vao.do_am,
+        thoi_gian_thiet_bi=du_lieu_vao.thoi_gian_thiet_bi,
+        thoi_gian_server=thoi_gian_server,
+    )
+
+    item_payload = du_lieu_ra.model_dump(by_alias=True, mode="json")
     try:
-        du_lieu_ra, alert_out = xu_ly_du_lieu(du_lieu_vao, db)  # Gọi core xử lý
+        save_reading(item_payload)
     except Exception as loi:
-        logger.exception("Loi xu ly du lieu: %s", loi)
+        logger.exception("Loi ghi Firebase: %s", loi)
         phan_hoi = ErrorResponse(
             trang_thai="error",
-            thong_diep="Loi xu ly du lieu",
+            thong_diep="Loi ghi du lieu",
             loi=[{"message": str(loi)}],
         )
-        return jsonify(phan_hoi.model_dump(by_alias=True)), 500
-    finally:
-        db.close()
+        return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content=phan_hoi.model_dump(by_alias=True))
 
-    payload: dict = {"item": du_lieu_ra.model_dump(by_alias=True)}
+    alert_out: Optional[AlertOut] = None
+    try:
+        danh_sach = get_recent_readings(sensor_id=du_lieu_vao.cam_bien_id, limit=100)
+        nhiet_do_list = [item.get("temp") for item in danh_sach if item.get("temp") is not None]
+        trung_binh = tinh_trung_binh(nhiet_do_list)
+        canh_bao, percent, muc_do = xu_ly_canh_bao(nhiet_do_list, du_lieu_vao.nhiet_do)
+        if canh_bao:
+            alert_out = AlertOut(
+                cam_bien_id=du_lieu_vao.cam_bien_id,
+                nhiet_do_tb=trung_binh,
+                nhiet_do_hien_tai=du_lieu_vao.nhiet_do,
+                phan_tram_tang=percent,
+                nguong_tang=NGUONG_CANH_BAO,
+                muc_do=muc_do,
+                thoi_gian_tao=thoi_gian_server,
+            )
+            save_alert(alert_out.model_dump(by_alias=True, mode="json"))
+    except Exception as loi:
+        logger.exception("Loi tinh canh bao: %s", loi)
+
+    payload: dict = {"item": item_payload}
     if alert_out is not None:
-        payload["alert"] = alert_out.model_dump(by_alias=True)
+        payload["alert"] = alert_out.model_dump(by_alias=True, mode="json")
 
     phan_hoi = ApiResponse(
         trang_thai="success",
         thong_diep="Da nhan du lieu",
         du_lieu=payload,
     )
-    return jsonify(phan_hoi.model_dump(by_alias=True)), 201
+    return JSONResponse(status_code=status.HTTP_201_CREATED, content=phan_hoi.model_dump(by_alias=True))
 
 
-@nhom_api.route("/api/du-lieu-nhiet", methods=["GET"])
-def lay_du_lieu_nhiet():
+@router.get("/api/du-lieu-nhiet")
+def lay_du_lieu_nhiet(sensor_id: Optional[str] = None, limit: int = 50):
     """Lấy danh sách dữ liệu gần nhất."""
-    sensor_id = request.args.get("sensor_id")
     try:
-        limit = int(request.args.get("limit", "50"))
-    except ValueError:
-        limit = 50
-
-    db = SessionLocal()
-    try:
-        danh_sach = get_recent_readings(db, sensor_id=sensor_id, limit=limit)
+        danh_sach = get_recent_readings(sensor_id=sensor_id, limit=limit)
         items = [
-            DuLieuNhietRa(
-                cam_bien_id=item.sensor_id,
-                thiet_bi_id=item.device_id,
-                nhiet_do=item.nhiet_do,
-                do_am=item.do_am,
-                thoi_gian_thiet_bi=item.thoi_gian_thiet_bi,
-                thoi_gian_server=item.thoi_gian_server,
-            ).model_dump(by_alias=True)
+            DuLieuNhietRa.model_validate(item).model_dump(by_alias=True, mode="json")
             for item in danh_sach
         ]
-    finally:
-        db.close()
+    except Exception as loi:
+        logger.exception("Loi lay du lieu nhiet: %s", loi)
+        phan_hoi = ErrorResponse(
+            trang_thai="error",
+            thong_diep="Loi lay du lieu",
+            loi=[{"message": str(loi)}],
+        )
+        return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content=phan_hoi.model_dump(by_alias=True))
 
     phan_hoi = ApiResponse(
         trang_thai="success",
         thong_diep="OK",
         du_lieu={"items": items},
     )
-    return jsonify(phan_hoi.model_dump(by_alias=True)), 200
+    return JSONResponse(status_code=status.HTTP_200_OK, content=phan_hoi.model_dump(by_alias=True))
 
 
-@nhom_api.route("/api/canh-bao", methods=["GET"])
-def lay_canh_bao():
+@router.get("/api/canh-bao")
+def lay_canh_bao(sensor_id: Optional[str] = None, limit: int = 50):
     """Lấy danh sách cảnh báo gần nhất."""
-    sensor_id = request.args.get("sensor_id")
     try:
-        limit = int(request.args.get("limit", "50"))
-    except ValueError:
-        limit = 50
-
-    db = SessionLocal()
-    try:
-        danh_sach = get_alerts(db, sensor_id=sensor_id, limit=limit)
+        danh_sach = get_recent_alerts(sensor_id=sensor_id, limit=limit)
         items = [
-            AlertOut(
-                cam_bien_id=item.sensor_id,
-                nhiet_do_tb=item.nhiet_do_tb,
-                nhiet_do_hien_tai=item.nhiet_do_hien_tai,
-                phan_tram_tang=item.phan_tram_tang,
-                nguong_tang=item.nguong,
-                muc_do=item.muc_do,
-                thoi_gian_tao=item.tao_luc,
-            ).model_dump(by_alias=True)
+            AlertOut.model_validate(item).model_dump(by_alias=True, mode="json")
             for item in danh_sach
         ]
-    finally:
-        db.close()
+    except Exception as loi:
+        logger.exception("Loi lay canh bao: %s", loi)
+        phan_hoi = ErrorResponse(
+            trang_thai="error",
+            thong_diep="Loi lay canh bao",
+            loi=[{"message": str(loi)}],
+        )
+        return JSONResponse(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, content=phan_hoi.model_dump(by_alias=True))
 
     phan_hoi = ApiResponse(
         trang_thai="success",
         thong_diep="OK",
         du_lieu={"items": items},
     )
-    return jsonify(phan_hoi.model_dump(by_alias=True)), 200
+    return JSONResponse(status_code=status.HTTP_200_OK, content=phan_hoi.model_dump(by_alias=True))
 
 
-@nhom_api.route("/api/trang-thai", methods=["GET"])
+@router.get("/api/trang-thai")
 def trang_thai():
     """Kiểm tra trạng thái server."""
     phan_hoi = ApiResponse(
@@ -144,4 +140,4 @@ def trang_thai():
         thong_diep="Đang hoạt động",
         du_lieu={"server_ts": datetime.now(timezone.utc).isoformat()},
     )
-    return jsonify(phan_hoi.model_dump(by_alias=True)), 200
+    return JSONResponse(status_code=status.HTTP_200_OK, content=phan_hoi.model_dump(by_alias=True))

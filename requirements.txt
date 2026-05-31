@@ -1,11 +1,13 @@
 # Core / API
-flask>=2.3
-flask-cors>=4.0
+fastapi>=0.111
+uvicorn>=0.30
 pydantic>=2.6
 sqlalchemy>=2.0
 python-dotenv>=1.0
 requests>=2.31
 pyyaml>=6.0
+firebase-admin>=6.4
+ntplib>=0.4
 
 # UI (chon 1)
 # Tkinter da co san trong Python (Windows) - SU DUNG TKINTER

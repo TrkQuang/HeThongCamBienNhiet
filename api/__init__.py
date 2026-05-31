@@ -1,3 +1,3 @@
-from .app import create_app  # Hàm tạo Flask app
+from .app import app, create_app  # FastAPI app factory
 
-__all__ = ["create_app"]  # Công khai hàm khởi tạo
+__all__ = ["app", "create_app"]

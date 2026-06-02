@@ -1,5 +1,4 @@
 # database/db.py
-# LỆNH QUAN TRỌNG NHẤT (Nguyễn Đình Chương):
 # - init_db()          : tạo bảng khi chạy lần đầu
 # - get_db()           : lấy session đồng bộ cho API/UI
 # - DATABASE_URL       : cấu hình DB (mặc định sqlite)

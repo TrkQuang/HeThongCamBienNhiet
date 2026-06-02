@@ -1,5 +1,5 @@
 # core/aggregator.py
-# LỆNH QUAN TRỌNG: tinh_trung_binh(), tinh_phan_tram(), xu_ly_canh_bao()
+#  tinh_trung_binh(), tinh_phan_tram(), xu_ly_canh_bao()
 from typing import List, Tuple
 from .alert_rules import kiem_tra_canh_bao
 

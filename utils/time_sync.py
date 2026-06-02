@@ -1,6 +1,6 @@
 # utils/time_sync.py
 from datetime import datetime, timezone
-import ntplib
+import ntplib #là thư viện Python dùng để lấy thời gian chính xác từ server NTP (Network Time Protocol).
 
 def lay_thoi_gian_utc() -> datetime:
     """Lấy thời gian UTC chuẩn từ NTP hoặc fallback local."""

@@ -1,5 +1,5 @@
 # core/alert_rules.py
-# LỆNH QUAN TRỌNG: kiem_tra_canh_bao() - logic > 10%
+#  kiem_tra_canh_bao() - logic > 10%
 from .thresholds import NGUONG_CANH_BAO
 
 def kiem_tra_canh_bao(avg_temp: float, current_temp: float) -> tuple[bool, float, str]:

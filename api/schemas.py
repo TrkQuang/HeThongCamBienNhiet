@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, Field, ConfigDict, AliasChoices
 
 
 class DuLieuNhietVao(BaseModel):
@@ -9,23 +9,21 @@ class DuLieuNhietVao(BaseModel):
 
     model_config = ConfigDict(populate_by_name=True, extra="ignore")
 
-    cam_bien_id: str = Field(alias="sensor_id")  # Mã cảm biến
+    thiet_bi_id: str = Field(alias="device_id")  # Mã thiết bị
     nhiet_do: float = Field(alias="temp")  # Nhiệt độ đo được
     do_am: Optional[float] = Field(default=None, alias="humidity")  # Độ ẩm (nếu có)
     thoi_gian_thiet_bi: Optional[datetime] = Field(default=None, alias="ts")  # Thời gian thiết bị
-    thiet_bi_id: str = Field(alias="device_id")  # Mã thiết bị
 
 
 class DuLieuNhietRa(BaseModel):
     """Dữ liệu trả ra sau xử lý."""
 
-    model_config = ConfigDict(populate_by_name=True)
+    model_config = ConfigDict(populate_by_name=True, extra="ignore")
 
-    cam_bien_id: str = Field(alias="sensor_id")
-    thiet_bi_id: str = Field(alias="device_id")
+    thiet_bi_id: str = Field(alias="device_id", validation_alias=AliasChoices("device_id", "sensor_id"))
     nhiet_do: float = Field(alias="temp")
     do_am: Optional[float] = Field(default=None, alias="humidity")
-    thoi_gian_thiet_bi: Optional[datetime] = Field(default=None, alias="ts")
+    thoi_gian_thiet_bi: Optional[datetime] = Field(default=None, alias="timestamp", validation_alias=AliasChoices("ts", "timestamp"))
     thoi_gian_server: Optional[datetime] = Field(default=None, alias="server_ts")
 
 
@@ -54,10 +52,47 @@ class AlertOut(BaseModel):
 
     model_config = ConfigDict(populate_by_name=True)
 
-    cam_bien_id: str = Field(alias="sensor_id")
+    thiet_bi_id: str = Field(alias="device_id")
     nhiet_do_tb: float = Field(alias="avg_temp")
-    nhiet_do_hien_tai: float = Field(alias="current_temp")
+    nhiet_do_hien_tai: float = Field(alias="temp")
     phan_tram_tang: float = Field(alias="percent_increase")
     nguong_tang: float = Field(alias="threshold")
     muc_do: str = Field(alias="level")
-    thoi_gian_tao: Optional[datetime] = Field(default=None, alias="created_at")
+    thong_diep: str = Field(default="Cảnh báo nhiệt độ", alias="warning")
+    thoi_gian_tao: Optional[datetime] = Field(default=None, alias="timestamp")
+
+
+class AiSuggestionRequest(BaseModel):
+    """Yêu cầu gợi ý AI."""
+
+    model_config = ConfigDict(populate_by_name=True)
+
+    nhiet_do_hien_tai: float = Field(alias="current_temp")
+    nhiet_do_trung_binh: float = Field(alias="avg_temp")
+    nguong: float = Field(alias="threshold")
+
+
+class AiSuggestionResponse(BaseModel):
+    """Phản hồi gợi ý AI."""
+
+    model_config = ConfigDict(populate_by_name=True)
+
+    goi_y: str = Field(alias="suggestion")
+
+class UserLogin(BaseModel):
+    username: str
+    password: str
+
+class UserRegister(BaseModel):
+    username: str
+    password: str
+
+class DeviceLink(BaseModel):
+    device_id: str
+    name: str
+
+class DeviceSettings(BaseModel):
+    temperatureThreshold: Optional[float] = None
+    humidityThreshold: Optional[float] = None
+    samplingInterval: Optional[int] = None
+    notificationEnabled: Optional[bool] = None

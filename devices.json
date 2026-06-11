@@ -1,0 +1,16 @@
+{
+  "api_base_url": "http://127.0.0.1:5000",
+  "device_id": "1109010",
+  "devices": [
+    {
+      "id": "1109010",
+      "name": "room A"
+    }
+  ],
+  "warning_threshold": 32.7,
+  "danger_threshold": 40.8,
+  "humidity_threshold": 80.0,
+  "refresh_ms": 60000,
+  "sound_alert": true,
+  "email_alert": false
+}

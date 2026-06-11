@@ -28,12 +28,13 @@ class SettingsView(ctk.CTkFrame):
 	def __init__(self, parent, settings: AppSettings, on_save: Callable[[AppSettings], None]):
 		super().__init__(parent, fg_color=MAU_NEN_SANG)
 		self._on_save = on_save
+		self._settings = settings
 
 		self.nguong_canh_bao = tk.DoubleVar(value=settings.warning_threshold)
 		self.nguong_nguy_hiem = tk.DoubleVar(value=settings.danger_threshold)
+		self.nguong_do_am = tk.DoubleVar(value=settings.humidity_threshold)
 		self.tan_suat_lay_mau = tk.IntVar(value=max(int(settings.refresh_ms / 1000), 1))
 		self.api_url = tk.StringVar(value=settings.api_base_url)
-		self.device_id = tk.StringVar(value=settings.sensor_id or "")
 		self.can_bao_am_thanh = tk.BooleanVar(value=settings.sound_alert)
 		self.gui_email = tk.BooleanVar(value=settings.email_alert)
 
@@ -55,7 +56,7 @@ class SettingsView(ctk.CTkFrame):
 
 		nhan_tieu_de = ctk.CTkLabel(
 			tieu_de,
-			text="Cài đặt",
+			text="Cài đặt hệ thống",
 			font=FONT_TIEU_DE,
 			text_color=MAU_CHU_CHINH,
 		)
@@ -80,7 +81,7 @@ class SettingsView(ctk.CTkFrame):
 
 		nhan = ctk.CTkLabel(
 			khung,
-			text="Cấu hình nhiệt độ",
+			text="Cấu hình ngưỡng",
 			font=FONT_TIEU_DE_THE,
 			text_color=MAU_CHU_CHINH,
 		)
@@ -104,7 +105,7 @@ class SettingsView(ctk.CTkFrame):
 			khung,
 			"Tần suất lấy mẫu (giây)",
 			self.tan_suat_lay_mau,
-			5,
+			1,
 			60,
 			is_int=True,
 		)
@@ -164,7 +165,6 @@ class SettingsView(ctk.CTkFrame):
 		nhan.pack(anchor="w", pady=(0, 15))
 
 		self.tao_hang_entry(khung, "API URL", self.api_url)
-		self.tao_hang_entry(khung, "Device ID", self.device_id)
 
 		duong_ngan = ctk.CTkFrame(khung, height=1, fg_color=MAU_DUONG_BIEN)
 		duong_ngan.pack(fill="x", pady=15)
@@ -238,22 +238,15 @@ class SettingsView(ctk.CTkFrame):
 		nut_luu.pack(anchor="e", padx=10, pady=10)
 
 	def luu_cau_hinh(self):
-		api_url = self.api_url.get().strip().rstrip("/")
-		if not api_url:
-			self.nhan_trang_thai.configure(text="API URL không hợp lệ")
-			return
+		self._settings.api_base_url = self.api_url.get().strip().rstrip("/")
+		self._settings.warning_threshold = float(self.nguong_canh_bao.get())
+		self._settings.danger_threshold = float(self.nguong_nguy_hiem.get())
+		self._settings.humidity_threshold = float(self.nguong_do_am.get())
+		self._settings.refresh_ms = int(self.tan_suat_lay_mau.get()) * 1000
+		self._settings.sound_alert = bool(self.can_bao_am_thanh.get())
+		self._settings.email_alert = bool(self.gui_email.get())
 
-		settings = AppSettings(
-			api_base_url=api_url,
-			sensor_id=self.device_id.get().strip(),
-			warning_threshold=float(self.nguong_canh_bao.get()),
-			danger_threshold=float(self.nguong_nguy_hiem.get()),
-			refresh_ms=int(self.tan_suat_lay_mau.get()) * 1000,
-			sound_alert=bool(self.can_bao_am_thanh.get()),
-			email_alert=bool(self.gui_email.get()),
-		)
-		self._on_save(settings)
-		self.nhan_trang_thai.configure(text="Đã lưu cấu hình")
-
+		self._on_save(self._settings)
+		self.nhan_trang_thai.configure(text="Đã lưu và đồng bộ cấu hình")
 
 __all__ = ["SettingsView"]

@@ -2,20 +2,22 @@ from __future__ import annotations
 
 import json
 import os
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 
-_SETTINGS_PATH = Path("config/ui_settings.json")
+_SETTINGS_PATH = Path("devices.json")
 
 
 @dataclass
 class AppSettings:
     api_base_url: str = "http://127.0.0.1:5000"
-    sensor_id: str = ""
+    device_id: str = ""
+    devices: List[Dict[str, str]] = field(default_factory=list)
     warning_threshold: float = 35.0
     danger_threshold: float = 40.0
+    humidity_threshold: float = 80.0
     refresh_ms: int = 3000
     sound_alert: bool = True
     email_alert: bool = False
@@ -61,10 +63,14 @@ def load_settings() -> AppSettings:
             if hasattr(settings, key):
                 setattr(settings, key, value)
 
+    # Ensure defaults like devices exist even if file is empty
+    if not settings.devices:
+        settings.devices = []
+
     return settings
 
 
 def save_settings(settings: AppSettings) -> None:
     _SETTINGS_PATH.parent.mkdir(parents=True, exist_ok=True)
     payload = asdict(settings)
-    _SETTINGS_PATH.write_text(json.dumps(payload, ensure_ascii=True, indent=2), encoding="utf-8")
+    _SETTINGS_PATH.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")

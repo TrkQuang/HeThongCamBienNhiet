@@ -1,0 +1,968 @@
+2026-06-10 18:05:28,108 [ERROR] Loi lay du lieu nhiet: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...4', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+Traceback (most recent call last):
+  File "C:\Users\shuut\Documents\base\HeThongCamBienNhiet\api\routes.py", line 97, in lay_du_lieu_nhiet
+    DuLieuNhietRa.model_validate(item).model_dump(by_alias=True, mode="json")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\shuut\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\main.py", line 732, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...4', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-06-10 18:05:29,350 [ERROR] Loi lay du lieu nhiet: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...4', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+Traceback (most recent call last):
+  File "C:\Users\shuut\Documents\base\HeThongCamBienNhiet\api\routes.py", line 97, in lay_du_lieu_nhiet
+    DuLieuNhietRa.model_validate(item).model_dump(by_alias=True, mode="json")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\shuut\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\main.py", line 732, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...4', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-06-10 18:05:29,493 [ERROR] Loi lay du lieu nhiet: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...4', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+Traceback (most recent call last):
+  File "C:\Users\shuut\Documents\base\HeThongCamBienNhiet\api\routes.py", line 97, in lay_du_lieu_nhiet
+    DuLieuNhietRa.model_validate(item).model_dump(by_alias=True, mode="json")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\shuut\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\main.py", line 732, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...4', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-06-10 18:05:32,999 [ERROR] Loi lay du lieu nhiet: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...4', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+Traceback (most recent call last):
+  File "C:\Users\shuut\Documents\base\HeThongCamBienNhiet\api\routes.py", line 97, in lay_du_lieu_nhiet
+    DuLieuNhietRa.model_validate(item).model_dump(by_alias=True, mode="json")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\shuut\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\main.py", line 732, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...4', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-06-10 18:05:33,101 [ERROR] Loi lay du lieu nhiet: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...4', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+Traceback (most recent call last):
+  File "C:\Users\shuut\Documents\base\HeThongCamBienNhiet\api\routes.py", line 97, in lay_du_lieu_nhiet
+    DuLieuNhietRa.model_validate(item).model_dump(by_alias=True, mode="json")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\shuut\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\main.py", line 732, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...4', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-06-10 18:05:36,462 [ERROR] Loi lay du lieu nhiet: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...4', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+Traceback (most recent call last):
+  File "C:\Users\shuut\Documents\base\HeThongCamBienNhiet\api\routes.py", line 97, in lay_du_lieu_nhiet
+    DuLieuNhietRa.model_validate(item).model_dump(by_alias=True, mode="json")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\shuut\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\main.py", line 732, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...4', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-06-10 18:05:36,605 [ERROR] Loi lay du lieu nhiet: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...4', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+Traceback (most recent call last):
+  File "C:\Users\shuut\Documents\base\HeThongCamBienNhiet\api\routes.py", line 97, in lay_du_lieu_nhiet
+    DuLieuNhietRa.model_validate(item).model_dump(by_alias=True, mode="json")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\shuut\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\main.py", line 732, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...4', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-06-10 18:05:39,891 [ERROR] Loi lay du lieu nhiet: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...4', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+Traceback (most recent call last):
+  File "C:\Users\shuut\Documents\base\HeThongCamBienNhiet\api\routes.py", line 97, in lay_du_lieu_nhiet
+    DuLieuNhietRa.model_validate(item).model_dump(by_alias=True, mode="json")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\shuut\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\main.py", line 732, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...4', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-06-10 18:05:40,120 [ERROR] Loi lay du lieu nhiet: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...4', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+Traceback (most recent call last):
+  File "C:\Users\shuut\Documents\base\HeThongCamBienNhiet\api\routes.py", line 97, in lay_du_lieu_nhiet
+    DuLieuNhietRa.model_validate(item).model_dump(by_alias=True, mode="json")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\shuut\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\main.py", line 732, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...4', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-06-10 18:05:43,032 [ERROR] Loi lay du lieu nhiet: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...4', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+Traceback (most recent call last):
+  File "C:\Users\shuut\Documents\base\HeThongCamBienNhiet\api\routes.py", line 97, in lay_du_lieu_nhiet
+    DuLieuNhietRa.model_validate(item).model_dump(by_alias=True, mode="json")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\shuut\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\main.py", line 732, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...4', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-06-10 18:05:43,091 [ERROR] Loi lay du lieu nhiet: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...4', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+Traceback (most recent call last):
+  File "C:\Users\shuut\Documents\base\HeThongCamBienNhiet\api\routes.py", line 97, in lay_du_lieu_nhiet
+    DuLieuNhietRa.model_validate(item).model_dump(by_alias=True, mode="json")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\shuut\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\main.py", line 732, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...4', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-06-10 18:05:46,118 [ERROR] Loi lay du lieu nhiet: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...4', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+Traceback (most recent call last):
+  File "C:\Users\shuut\Documents\base\HeThongCamBienNhiet\api\routes.py", line 97, in lay_du_lieu_nhiet
+    DuLieuNhietRa.model_validate(item).model_dump(by_alias=True, mode="json")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\shuut\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\main.py", line 732, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...4', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-06-10 18:05:46,221 [ERROR] Loi lay du lieu nhiet: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...4', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+Traceback (most recent call last):
+  File "C:\Users\shuut\Documents\base\HeThongCamBienNhiet\api\routes.py", line 97, in lay_du_lieu_nhiet
+    DuLieuNhietRa.model_validate(item).model_dump(by_alias=True, mode="json")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\shuut\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\main.py", line 732, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...4', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-06-10 18:05:49,848 [ERROR] Loi lay du lieu nhiet: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...4', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+Traceback (most recent call last):
+  File "C:\Users\shuut\Documents\base\HeThongCamBienNhiet\api\routes.py", line 97, in lay_du_lieu_nhiet
+    DuLieuNhietRa.model_validate(item).model_dump(by_alias=True, mode="json")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\shuut\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\main.py", line 732, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...4', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-06-10 18:05:49,955 [ERROR] Loi lay du lieu nhiet: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...4', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+Traceback (most recent call last):
+  File "C:\Users\shuut\Documents\base\HeThongCamBienNhiet\api\routes.py", line 97, in lay_du_lieu_nhiet
+    DuLieuNhietRa.model_validate(item).model_dump(by_alias=True, mode="json")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\shuut\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\main.py", line 732, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...4', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-06-10 18:10:31,825 [ERROR] Loi lay du lieu nhiet: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...9', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+Traceback (most recent call last):
+  File "C:\Users\shuut\Documents\base\HeThongCamBienNhiet\api\routes.py", line 97, in lay_du_lieu_nhiet
+    DuLieuNhietRa.model_validate(item).model_dump(by_alias=True, mode="json")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\shuut\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\main.py", line 732, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...9', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-06-10 18:10:32,033 [ERROR] Loi lay du lieu nhiet: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...9', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+Traceback (most recent call last):
+  File "C:\Users\shuut\Documents\base\HeThongCamBienNhiet\api\routes.py", line 97, in lay_du_lieu_nhiet
+    DuLieuNhietRa.model_validate(item).model_dump(by_alias=True, mode="json")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\shuut\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\main.py", line 732, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...9', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-06-10 18:10:35,372 [ERROR] Loi lay du lieu nhiet: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...9', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+Traceback (most recent call last):
+  File "C:\Users\shuut\Documents\base\HeThongCamBienNhiet\api\routes.py", line 97, in lay_du_lieu_nhiet
+    DuLieuNhietRa.model_validate(item).model_dump(by_alias=True, mode="json")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\shuut\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\main.py", line 732, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...9', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-06-10 18:10:35,704 [ERROR] Loi lay du lieu nhiet: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...9', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+Traceback (most recent call last):
+  File "C:\Users\shuut\Documents\base\HeThongCamBienNhiet\api\routes.py", line 97, in lay_du_lieu_nhiet
+    DuLieuNhietRa.model_validate(item).model_dump(by_alias=True, mode="json")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\shuut\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\main.py", line 732, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...9', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-06-10 18:10:38,771 [ERROR] Loi lay du lieu nhiet: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...9', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+Traceback (most recent call last):
+  File "C:\Users\shuut\Documents\base\HeThongCamBienNhiet\api\routes.py", line 97, in lay_du_lieu_nhiet
+    DuLieuNhietRa.model_validate(item).model_dump(by_alias=True, mode="json")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\shuut\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\main.py", line 732, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...9', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-06-10 18:10:39,152 [ERROR] Loi lay du lieu nhiet: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...9', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+Traceback (most recent call last):
+  File "C:\Users\shuut\Documents\base\HeThongCamBienNhiet\api\routes.py", line 97, in lay_du_lieu_nhiet
+    DuLieuNhietRa.model_validate(item).model_dump(by_alias=True, mode="json")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\shuut\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\main.py", line 732, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...9', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-06-10 18:10:42,164 [ERROR] Loi lay du lieu nhiet: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...9', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+Traceback (most recent call last):
+  File "C:\Users\shuut\Documents\base\HeThongCamBienNhiet\api\routes.py", line 97, in lay_du_lieu_nhiet
+    DuLieuNhietRa.model_validate(item).model_dump(by_alias=True, mode="json")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\shuut\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\main.py", line 732, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...9', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-06-10 18:10:42,653 [ERROR] Loi lay du lieu nhiet: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...9', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+Traceback (most recent call last):
+  File "C:\Users\shuut\Documents\base\HeThongCamBienNhiet\api\routes.py", line 97, in lay_du_lieu_nhiet
+    DuLieuNhietRa.model_validate(item).model_dump(by_alias=True, mode="json")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\shuut\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\main.py", line 732, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...9', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-06-10 18:10:45,830 [ERROR] Loi lay du lieu nhiet: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...9', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+Traceback (most recent call last):
+  File "C:\Users\shuut\Documents\base\HeThongCamBienNhiet\api\routes.py", line 97, in lay_du_lieu_nhiet
+    DuLieuNhietRa.model_validate(item).model_dump(by_alias=True, mode="json")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\shuut\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\main.py", line 732, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...9', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-06-10 18:10:46,215 [ERROR] Loi lay du lieu nhiet: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...9', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+Traceback (most recent call last):
+  File "C:\Users\shuut\Documents\base\HeThongCamBienNhiet\api\routes.py", line 97, in lay_du_lieu_nhiet
+    DuLieuNhietRa.model_validate(item).model_dump(by_alias=True, mode="json")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\shuut\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\main.py", line 732, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...9', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-06-10 18:10:49,246 [ERROR] Loi lay du lieu nhiet: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...9', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+Traceback (most recent call last):
+  File "C:\Users\shuut\Documents\base\HeThongCamBienNhiet\api\routes.py", line 97, in lay_du_lieu_nhiet
+    DuLieuNhietRa.model_validate(item).model_dump(by_alias=True, mode="json")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\shuut\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\main.py", line 732, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...9', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-06-10 18:10:49,693 [ERROR] Loi lay du lieu nhiet: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...9', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+Traceback (most recent call last):
+  File "C:\Users\shuut\Documents\base\HeThongCamBienNhiet\api\routes.py", line 97, in lay_du_lieu_nhiet
+    DuLieuNhietRa.model_validate(item).model_dump(by_alias=True, mode="json")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\shuut\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\main.py", line 732, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...9', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-06-10 18:10:52,810 [ERROR] Loi lay du lieu nhiet: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...9', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+Traceback (most recent call last):
+  File "C:\Users\shuut\Documents\base\HeThongCamBienNhiet\api\routes.py", line 97, in lay_du_lieu_nhiet
+    DuLieuNhietRa.model_validate(item).model_dump(by_alias=True, mode="json")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\shuut\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\main.py", line 732, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...9', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-06-10 18:10:53,209 [ERROR] Loi lay du lieu nhiet: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...9', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+Traceback (most recent call last):
+  File "C:\Users\shuut\Documents\base\HeThongCamBienNhiet\api\routes.py", line 97, in lay_du_lieu_nhiet
+    DuLieuNhietRa.model_validate(item).model_dump(by_alias=True, mode="json")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\shuut\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\main.py", line 732, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...9', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-06-10 18:11:53,345 [ERROR] Loi lay du lieu nhiet: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...2', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+Traceback (most recent call last):
+  File "C:\Users\shuut\Documents\base\HeThongCamBienNhiet\api\routes.py", line 97, in lay_du_lieu_nhiet
+    DuLieuNhietRa.model_validate(item).model_dump(by_alias=True, mode="json")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\shuut\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\main.py", line 732, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...2', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-06-10 18:15:00,716 [ERROR] Loi lay du lieu nhiet: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...8', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+Traceback (most recent call last):
+  File "C:\Users\shuut\Documents\base\HeThongCamBienNhiet\api\routes.py", line 97, in lay_du_lieu_nhiet
+    DuLieuNhietRa.model_validate(item).model_dump(by_alias=True, mode="json")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\shuut\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\main.py", line 732, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...8', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-06-10 18:15:01,242 [ERROR] Loi lay du lieu nhiet: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...8', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+Traceback (most recent call last):
+  File "C:\Users\shuut\Documents\base\HeThongCamBienNhiet\api\routes.py", line 97, in lay_du_lieu_nhiet
+    DuLieuNhietRa.model_validate(item).model_dump(by_alias=True, mode="json")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\shuut\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\main.py", line 732, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...8', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-06-10 18:15:11,706 [ERROR] Loi lay du lieu nhiet: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...8', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+Traceback (most recent call last):
+  File "C:\Users\shuut\Documents\base\HeThongCamBienNhiet\api\routes.py", line 97, in lay_du_lieu_nhiet
+    DuLieuNhietRa.model_validate(item).model_dump(by_alias=True, mode="json")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\shuut\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\main.py", line 732, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...8', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-06-10 18:15:12,445 [ERROR] Loi lay du lieu nhiet: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...8', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+Traceback (most recent call last):
+  File "C:\Users\shuut\Documents\base\HeThongCamBienNhiet\api\routes.py", line 97, in lay_du_lieu_nhiet
+    DuLieuNhietRa.model_validate(item).model_dump(by_alias=True, mode="json")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\shuut\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\main.py", line 732, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...8', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-06-10 18:15:26,866 [ERROR] Loi lay du lieu nhiet: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...0', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+Traceback (most recent call last):
+  File "C:\Users\shuut\Documents\base\HeThongCamBienNhiet\api\routes.py", line 97, in lay_du_lieu_nhiet
+    DuLieuNhietRa.model_validate(item).model_dump(by_alias=True, mode="json")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\shuut\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\main.py", line 732, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...0', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-06-10 18:15:27,358 [ERROR] Loi lay du lieu nhiet: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...0', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+Traceback (most recent call last):
+  File "C:\Users\shuut\Documents\base\HeThongCamBienNhiet\api\routes.py", line 97, in lay_du_lieu_nhiet
+    DuLieuNhietRa.model_validate(item).model_dump(by_alias=True, mode="json")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\shuut\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\main.py", line 732, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...0', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-06-10 18:16:15,428 [ERROR] Loi lay du lieu nhiet: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...1', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+Traceback (most recent call last):
+  File "C:\Users\shuut\Documents\base\HeThongCamBienNhiet\api\routes.py", line 97, in lay_du_lieu_nhiet
+    DuLieuNhietRa.model_validate(item).model_dump(by_alias=True, mode="json")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\shuut\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\main.py", line 732, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...1', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-06-10 18:16:15,647 [ERROR] Loi lay du lieu nhiet: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...1', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+Traceback (most recent call last):
+  File "C:\Users\shuut\Documents\base\HeThongCamBienNhiet\api\routes.py", line 97, in lay_du_lieu_nhiet
+    DuLieuNhietRa.model_validate(item).model_dump(by_alias=True, mode="json")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\shuut\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\main.py", line 732, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...1', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-06-11 10:39:36,302 [ERROR] Loi lay du lieu nhiet: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...4', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+Traceback (most recent call last):
+  File "C:\Users\shuut\Documents\base\HeThongCamBienNhiet\api\routes.py", line 97, in lay_du_lieu_nhiet
+    DuLieuNhietRa.model_validate(item).model_dump(by_alias=True, mode="json")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\shuut\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\main.py", line 732, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...4', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-06-11 10:39:37,030 [ERROR] Loi lay du lieu nhiet: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...4', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+Traceback (most recent call last):
+  File "C:\Users\shuut\Documents\base\HeThongCamBienNhiet\api\routes.py", line 97, in lay_du_lieu_nhiet
+    DuLieuNhietRa.model_validate(item).model_dump(by_alias=True, mode="json")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\shuut\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\main.py", line 732, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...4', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-06-11 10:40:37,261 [ERROR] Loi lay du lieu nhiet: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...5', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+Traceback (most recent call last):
+  File "C:\Users\shuut\Documents\base\HeThongCamBienNhiet\api\routes.py", line 97, in lay_du_lieu_nhiet
+    DuLieuNhietRa.model_validate(item).model_dump(by_alias=True, mode="json")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\shuut\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\main.py", line 732, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...5', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-06-11 10:40:37,425 [ERROR] Loi lay du lieu nhiet: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...5', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+Traceback (most recent call last):
+  File "C:\Users\shuut\Documents\base\HeThongCamBienNhiet\api\routes.py", line 97, in lay_du_lieu_nhiet
+    DuLieuNhietRa.model_validate(item).model_dump(by_alias=True, mode="json")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\shuut\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\main.py", line 732, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...5', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-06-11 10:41:41,446 [ERROR] Loi lay du lieu nhiet: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...5', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+Traceback (most recent call last):
+  File "C:\Users\shuut\Documents\base\HeThongCamBienNhiet\api\routes.py", line 97, in lay_du_lieu_nhiet
+    DuLieuNhietRa.model_validate(item).model_dump(by_alias=True, mode="json")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\shuut\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\main.py", line 732, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...5', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+2026-06-11 10:41:41,497 [ERROR] Loi lay du lieu nhiet: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...5', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing
+Traceback (most recent call last):
+  File "C:\Users\shuut\Documents\base\HeThongCamBienNhiet\api\routes.py", line 97, in lay_du_lieu_nhiet
+    DuLieuNhietRa.model_validate(item).model_dump(by_alias=True, mode="json")
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\shuut\AppData\Local\Programs\Python\Python313\Lib\site-packages\pydantic\main.py", line 732, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for DuLieuNhietRa
+device_id
+  Field required [type=missing, input_value={'address': 'chưa có', ...5', 'wanning': 'normal'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.13/v/missing

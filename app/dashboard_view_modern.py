@@ -4,19 +4,19 @@ Xây dựng với CustomTkinter và Matplotlib
 """
 
 import threading
-from typing import Optional
+from typing import Optional, List, Dict, Any
 import customtkinter as ctk
 import tkinter as tk
 from datetime import datetime
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
-from .api_client import ApiClient
-from .settings_store import AppSettings
+from .data_service import DataService
 from .widgets import (
     MAU_NEN_SANG,
     MAU_THE_BG,
     MAU_CHINH,
+    MAU_CHINH_HOVER,
     MAU_CHU_CHINH,
     MAU_CHU_PHU,
     MAU_DUONG_BIEN,
@@ -69,31 +69,27 @@ class ChiBaoTron(tk.Canvas):
         self.create_text(
             tam_x,
             tam_y,
-            text=f"{self.gia_tri}°C",
+            text=f"{self.gia_tri:.0f}°C",
             font=("Arial", 10, "bold"),
             fill="white",
         )
 
 
 class DashboardView(ctk.CTkFrame):
-    def __init__(self, parent, api_client: ApiClient, settings: AppSettings):
+    def __init__(self, parent, data_service: DataService):
         super().__init__(parent, fg_color=MAU_NEN_SANG)
-        self._api_client = api_client
-        self._settings = settings
-        self._refresh_ms = max(settings.refresh_ms, 1000)
-        self._sensor_id = settings.sensor_id.strip() or None
-        self._dang_cap_nhat = False
-        self._after_id = None
-
-        self.nhiet_do_hien_tai = 30
-        self.do_am = 65
-        self.nguong_canh_bao = settings.warning_threshold
+        self._ds = data_service
+        
+        self.nhiet_do_hien_tai = 0.0
+        self.do_am = 0.0
 
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
         self.tao_noi_dung_chinh()
-        self.cap_nhat_bang_dieu_khien()
+        
+        # Subscribe to centralized data service
+        self._ds.subscribe(self.cap_nhat_giao_dien)
 
     def tao_noi_dung_chinh(self):
         khung_chinh = ctk.CTkFrame(self, fg_color=MAU_NEN_SANG, corner_radius=0)
@@ -134,13 +130,24 @@ class DashboardView(ctk.CTkFrame):
         )
         nhan_tieu_de.pack(side="left", anchor="w")
 
-        thoi_gian = ctk.CTkLabel(
+        self.nut_reload = ctk.CTkButton(
+            tieu_de,
+            text="🔄 Làm mới",
+            width=100,
+            height=32,
+            fg_color=MAU_CHINH,
+            hover_color=MAU_CHINH_HOVER,
+            command=self._ds.refresh_all
+        )
+        self.nut_reload.pack(side="right", padx=20)
+
+        self.nhan_thoi_gian_tieude = ctk.CTkLabel(
             tieu_de,
             text=datetime.now().strftime("%d/%m/%Y • %H:%M"),
             font=FONT_NHAN,
             text_color=MAU_CHU_PHU,
         )
-        thoi_gian.pack(side="right", anchor="e")
+        self.nhan_thoi_gian_tieude.pack(side="right", anchor="e")
 
     def tao_the_trang_thai(self, cha):
         the = The(cha)
@@ -161,7 +168,7 @@ class DashboardView(ctk.CTkFrame):
 
         self.nhan_nhiet_do = ctk.CTkLabel(
             trong,
-            text=f"{self.nhiet_do_hien_tai}°C",
+            text="--°C",
             font=FONT_SO_LON,
             text_color=MAU_CHINH,
         )
@@ -186,7 +193,7 @@ class DashboardView(ctk.CTkFrame):
 
         self.nhan_gia_tri_do_am = ctk.CTkLabel(
             khung_do_am,
-            text=f"{self.do_am}%",
+            text="--%",
             font=FONT_NOI_DUNG_BOLD,
             text_color=MAU_CHU_CHINH,
         )
@@ -203,12 +210,11 @@ class DashboardView(ctk.CTkFrame):
         )
         nhan_nguong.pack(side="left")
 
-        mau_nguong = MAU_NGUY_HIEM if self.nhiet_do_hien_tai > self.nguong_canh_bao else MAU_CHU_CHINH
         self.nhan_gia_tri_nguong = ctk.CTkLabel(
             khung_nguong,
-            text=f"{self.nguong_canh_bao}°C",
+            text="--°C",
             font=FONT_NOI_DUNG_BOLD,
-            text_color=mau_nguong,
+            text_color=MAU_CHU_CHINH,
         )
         self.nhan_gia_tri_nguong.pack(side="right")
 
@@ -233,16 +239,6 @@ class DashboardView(ctk.CTkFrame):
         hinh = Figure(figsize=(6, 3.5), dpi=100, facecolor=MAU_NEN_SANG)
         truc = hinh.add_subplot(111)
 
-        truc.set_facecolor(MAU_NEN_SANG)
-        truc.grid(True, alpha=0.2, linestyle="--", linewidth=0.5)
-        truc.set_ylabel("Nhiệt độ (°C)", fontsize=10, color=MAU_CHU_PHU)
-        truc.set_xlabel("")
-        truc.spines["top"].set_visible(False)
-        truc.spines["right"].set_visible(False)
-        truc.spines["left"].set_color(MAU_DUONG_BIEN)
-        truc.spines["bottom"].set_color(MAU_DUONG_BIEN)
-        truc.tick_params(colors=MAU_CHU_PHU, labelsize=9)
-
         canvas = FigureCanvasTkAgg(hinh, master=khung_bieu_do)
         canvas.draw()
         canvas.get_tk_widget().pack(fill="both", expand=True)
@@ -257,7 +253,7 @@ class DashboardView(ctk.CTkFrame):
 
         nhan_tieu_de = ctk.CTkLabel(
             the,
-            text="Nhiệt độ theo giờ",
+            text="Dữ liệu gần đây",
             font=FONT_TIEU_DE_THE,
             text_color=MAU_CHU_CHINH,
         )
@@ -266,76 +262,48 @@ class DashboardView(ctk.CTkFrame):
         self.khung_dong_thoi_gian = ctk.CTkFrame(the, fg_color=MAU_THE_BG)
         self.khung_dong_thoi_gian.pack(fill="both", expand=True, padx=25, pady=(0, 25))
 
-    def cap_nhat_bang_dieu_khien(self):
-        if self._dang_cap_nhat:
-            self._lap_lich_cap_nhat()
-            return
+    def cap_nhat_giao_dien(self):
+        """Callback from DataService when data changes."""
+        self.after(0, self._render_ui)
 
-        self._dang_cap_nhat = True
-        thread = threading.Thread(target=self._tai_du_lieu, daemon=True)
-        thread.start()
+    def _render_ui(self):
+        data = self._ds.current_data
+        history = self._ds.history
+        settings = self._ds.settings
+        
+        if not self._ds.device_id:
+             self.nhan_nhiet_do.configure(text="No Device")
+             return
 
-    def cap_nhat_cau_hinh(self, settings: AppSettings) -> None:
-        self._settings = settings
-        self._sensor_id = settings.sensor_id.strip() or None
-        self._refresh_ms = max(settings.refresh_ms, 1000)
-        self.nguong_canh_bao = settings.warning_threshold
-        self._cap_nhat_nguong_ui()
+        # 1. Update Current Stats
+        if data:
+            temp = float(data.get("temp", 0))
+            humidity = float(data.get("humidity", 0))
+            
+            self.nhan_nhiet_do.configure(
+                text=f"{temp:.1f}°C",
+                text_color=mau_theo_nhiet_do(temp)
+            )
+            self.nhan_gia_tri_do_am.configure(text=f"{humidity:.0f}%")
+            
+            threshold = settings.warning_threshold
+            mau_nguong = MAU_NGUY_HIEM if temp > threshold else MAU_CHU_CHINH
+            self.nhan_gia_tri_nguong.configure(
+                text=f"{threshold:.1f}°C",
+                text_color=mau_nguong
+            )
 
-    def _lap_lich_cap_nhat(self) -> None:
-        if self._after_id is not None:
-            self.after_cancel(self._after_id)
-        self._after_id = self.after(self._refresh_ms, self.cap_nhat_bang_dieu_khien)
+        # 2. Update Chart
+        if history:
+            self._cap_nhat_bieu_do(history)
+            self._cap_nhat_dong_thoi_gian(history)
 
-    def _tai_du_lieu(self) -> None:
-        readings = None
-        error = None
-        try:
-            readings = self._api_client.get_readings(sensor_id=self._sensor_id, limit=30)
-        except Exception as exc:
-            error = str(exc)
-
-        self.after(0, lambda: self._cap_nhat_du_lieu(readings, error))
-
-    def _cap_nhat_du_lieu(self, readings, error) -> None:
-        if readings:
-            latest = readings[0]
-            nhiet_do = latest.get("temp")
-            do_am = latest.get("humidity")
-
-            if nhiet_do is not None:
-                self.nhiet_do_hien_tai = float(nhiet_do)
-                self.nhan_nhiet_do.configure(
-                    text=f"{self.nhiet_do_hien_tai:.1f}°C",
-                    text_color=mau_theo_nhiet_do(self.nhiet_do_hien_tai),
-                )
-
-            if do_am is not None:
-                self.do_am = float(do_am)
-                self.nhan_gia_tri_do_am.configure(text=f"{self.do_am:.0f}%")
-
-            self._cap_nhat_nguong_ui()
-            self._cap_nhat_bieu_do(readings)
-            self._cap_nhat_dong_thoi_gian(readings)
-
-        if error:
-            self._lap_lich_cap_nhat()
-        else:
-            self._lap_lich_cap_nhat()
-
-        self._dang_cap_nhat = False
-
-    def _cap_nhat_nguong_ui(self) -> None:
-        mau_nguong = MAU_NGUY_HIEM if self.nhiet_do_hien_tai > self.nguong_canh_bao else MAU_CHU_CHINH
-        self.nhan_gia_tri_nguong.configure(
-            text=f"{self.nguong_canh_bao:.1f}°C",
-            text_color=mau_nguong,
-        )
+        self.nhan_thoi_gian_tieude.configure(text=datetime.now().strftime("%d/%m/%Y • %H:%M"))
 
     def _dinh_dang_gio(self, raw_ts: Optional[str]) -> str:
         if not raw_ts:
             return "--"
-        ts = raw_ts.replace("Z", "+00:00")
+        ts = str(raw_ts).replace("Z", "+00:00")
         try:
             dt = datetime.fromisoformat(ts)
             return dt.strftime("%H:%M")
@@ -343,84 +311,54 @@ class DashboardView(ctk.CTkFrame):
             return "--"
 
     def _cap_nhat_bieu_do(self, readings) -> None:
-        if not readings:
-            return
-        readings_rev = list(reversed(readings))[:9]
-        gio = [self._dinh_dang_gio(item.get("ts") or item.get("server_ts")) for item in readings_rev]
-        nhiet_do_list = [item.get("temp", 0) for item in readings_rev]
+        readings_rev = list(reversed(readings))[:10]
+        gio = [self._dinh_dang_gio(item.get("timestamp") or item.get("ts")) for item in readings_rev]
+        nhiet_do_list = [float(item.get("temp", 0)) for item in readings_rev]
 
         self.truc_bieu_do.clear()
+        self.truc_bieu_do.set_facecolor(MAU_NEN_SANG)
+        self.truc_bieu_do.grid(True, alpha=0.2, linestyle="--")
+        
         self.truc_bieu_do.plot(
             gio,
             nhiet_do_list,
             marker="o",
             linewidth=2.5,
-            markersize=7,
             color=MAU_CHINH,
-            markerfacecolor=MAU_CHINH,
-            markeredgewidth=0,
+            label="Nhiệt độ"
         )
         self.truc_bieu_do.fill_between(range(len(gio)), nhiet_do_list, alpha=0.1, color=MAU_CHINH)
-        self.truc_bieu_do.set_facecolor(MAU_NEN_SANG)
-        self.truc_bieu_do.grid(True, alpha=0.2, linestyle="--", linewidth=0.5)
-        self.truc_bieu_do.set_ylabel("Nhiệt độ (°C)", fontsize=10, color=MAU_CHU_PHU)
-        self.truc_bieu_do.set_xlabel("")
+        
         self.truc_bieu_do.spines["top"].set_visible(False)
         self.truc_bieu_do.spines["right"].set_visible(False)
-        self.truc_bieu_do.spines["left"].set_color(MAU_DUONG_BIEN)
-        self.truc_bieu_do.spines["bottom"].set_color(MAU_DUONG_BIEN)
-        self.truc_bieu_do.tick_params(colors=MAU_CHU_PHU, labelsize=9)
+        self.truc_bieu_do.tick_params(axis="both", labelsize=8)
+        
         self.canvas_bieu_do.draw()
 
     def _cap_nhat_dong_thoi_gian(self, readings) -> None:
         for child in self.khung_dong_thoi_gian.winfo_children():
             child.destroy()
 
-        readings_rev = list(reversed(readings))[:6]
-        for item in readings_rev:
+        # Show last 5 readings
+        for item in readings[:5]:
             nhiet_do = float(item.get("temp", 0))
-            gio = self._dinh_dang_gio(item.get("ts") or item.get("server_ts"))
+            gio = self._dinh_dang_gio(item.get("timestamp") or item.get("ts"))
 
             muc_thoi_gian = ctk.CTkFrame(self.khung_dong_thoi_gian, fg_color=MAU_THE_BG)
-            muc_thoi_gian.pack(fill="x", pady=15)
+            muc_thoi_gian.pack(fill="x", pady=5)
 
-            nhan_gio = ctk.CTkLabel(
-                muc_thoi_gian,
-                text=gio,
-                font=FONT_NOI_DUNG_BOLD,
-                text_color=MAU_CHU_CHINH,
-                width=60,
-            )
-            nhan_gio.pack(side="left", padx=(0, 20))
+            nhan_gio = ctk.CTkLabel(muc_thoi_gian, text=gio, font=FONT_NOI_DUNG_BOLD, width=60)
+            nhan_gio.pack(side="left", padx=10)
 
-            canvas_chi_bao = ChiBaoTron(
-                muc_thoi_gian,
-                nhiet_do,
-                width=70,
-                height=70,
-                bg=MAU_THE_BG,
-                highlightthickness=0,
-            )
+            canvas_chi_bao = ChiBaoTron(muc_thoi_gian, nhiet_do, width=70, height=70, bg=MAU_THE_BG, highlightthickness=0)
             canvas_chi_bao.pack(side="left", padx=10)
 
-            nhan_nhiet_do = ctk.CTkLabel(
-                muc_thoi_gian,
-                text=f"{nhiet_do:.1f}°C",
-                font=FONT_NOI_DUNG,
-                text_color=MAU_CHU_PHU,
-            )
-            nhan_nhiet_do.pack(side="left", padx=20)
+            nhan_nhiet_do = ctk.CTkLabel(muc_thoi_gian, text=f"{nhiet_do:.1f}°C", font=FONT_NOI_DUNG)
+            nhan_nhiet_do.pack(side="left", padx=10)
 
-            gia_tri_tien_trinh = min(nhiet_do / 40.0, 1.0)
-            thanh_tien_trinh = ctk.CTkProgressBar(
-                muc_thoi_gian,
-                fg_color=MAU_DUONG_BIEN,
-                progress_color=mau_theo_nhiet_do(nhiet_do),
-                height=6,
-                corner_radius=3,
-            )
+            thanh_tien_trinh = ctk.CTkProgressBar(muc_thoi_gian, fg_color=MAU_DUONG_BIEN, progress_color=mau_theo_nhiet_do(nhiet_do), height=6)
             thanh_tien_trinh.pack(side="left", fill="x", expand=True, padx=20)
-            thanh_tien_trinh.set(gia_tri_tien_trinh)
+            thanh_tien_trinh.set(min(nhiet_do / 45.0, 1.0))
 
 
 __all__ = ["DashboardView"]

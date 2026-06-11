@@ -7,6 +7,9 @@ from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
 from .routes import router
+from .auth_routes import router as auth_router
+from .device_routes import router as device_router
+from .settings_routes import router as settings_router
 
 
 def _cau_hinh_logging() -> None:
@@ -37,6 +40,9 @@ def create_app() -> FastAPI:
 	)
 
 	ung_dung.include_router(router)
+	ung_dung.include_router(auth_router)
+	ung_dung.include_router(device_router)
+	ung_dung.include_router(settings_router)
 	return ung_dung
 
 

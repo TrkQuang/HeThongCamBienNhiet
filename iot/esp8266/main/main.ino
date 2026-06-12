@@ -17,13 +17,13 @@ FirebaseConfig config;
 DHT dht(DHTPIN, DHTTYPE);
 
 //================ THÔNG TIN WIFI ===============
-const char* ten_wifi = "Nguyễn Đình Chương";
-const char* pass_wifi = "11111111";
+const char* ten_wifi = "Phuc Tai";
+const char* pass_wifi = "01012006";
 
 //================ BIẾN TOÀN CỤC ================
 unsigned long thoi_gian_bat_dau = 0;
 unsigned long thoi_gian_check_fb = 0; 
-long thoi_gian_do = 30000;          // Mặc định 5 phút
+long thoi_gian_do = 300000;          // Mặc định 5 phút
 String address_hien_tai = "chưa có"; // Mặc định chưa có
 long id_chip;
 
@@ -103,12 +103,12 @@ void loop() {
   // -------------------------------------------------------------
   if (hien_tai - thoi_gian_check_fb >= 3000) {
     thoi_gian_check_fb = hien_tai; 
-    String pathApp = "/settings/" + String(id_chip);
+    String pathSetting = "/settings/" + String(id_chip);
 
     // 1.2 Kiểm tra và cập nhật chu kỳ đo (thoi_gian_do)
-    if (Firebase.getInt(fbdo, pathApp + "/samplingInterval")) {
-      thoi_gian_do = fbdo.intData() * 1000;
-    }
+    if (Firebase.getInt(fbdo, pathSetting + "/samplingInterval")) {
+      thoi_gian_do = fbdo.intData() * 60000;
+    } 
   }
 
   // -------------------------------------------------------------

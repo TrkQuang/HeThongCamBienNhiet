@@ -103,7 +103,7 @@ class SettingsView(ctk.CTkFrame):
 		)
 		self.tao_hang_slider(
 			khung,
-			"Tần suất lấy mẫu (giây)",
+			"Tần suất lấy mẫu (Phút)",
 			self.tan_suat_lay_mau,
 			1,
 			60,

@@ -3,7 +3,7 @@ from pathlib import Path
 import firebase_admin
 from firebase_admin import credentials, db
 
-_DEFAULT_CREDENTIALS_PATH = "iot/key_firebase_HeThongNhiet.json"
+_DEFAULT_CREDENTIALS_PATH = "../iot/key_firebase_HeThongNhiet.json"
 _DEFAULT_DATABASE_URL = "https://hethongcambiennhiet-default-rtdb.asia-southeast1.firebasedatabase.app/"
 
 def _load_settings() -> dict:

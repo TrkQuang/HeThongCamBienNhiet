@@ -7,10 +7,10 @@
       "name": "room A"
     }
   ],
-  "warning_threshold": 32.7,
-  "danger_threshold": 40.8,
-  "humidity_threshold": 80.0,
-  "refresh_ms": 60000,
+  "warning_threshold": 25.0,
+  "danger_threshold": 32.8,
+  "humidity_threshold": 84.6,
+  "refresh_ms": 300000,
   "sound_alert": true,
   "email_alert": false
 }

@@ -246,7 +246,7 @@ class MainWindow(ctk.CTk):
 		self._views = {
 			"Dashboard": DashboardView(self.khung_view, self._data_service),
 			"Alerts": AlertView(self.khung_view, self._data_service),
-			"Settings": SettingsView(self.khung_view, self._settings, self._luu_cau_hinh),
+			"Settings": SettingsView(self.khung_view, self._data_service, self._luu_cau_hinh),
 		}
 
 		for view in self._views.values():
@@ -297,7 +297,7 @@ class MainWindow(ctk.CTk):
 					payload = {
 						"temperatureThreshold": cau_hinh.warning_threshold,
 						"humidityThreshold": cau_hinh.humidity_threshold,
-						"samplingInterval": int(cau_hinh.refresh_ms / 1000),
+						"samplingInterval": max(int(cau_hinh.refresh_ms / 60000), 1),
 						"notificationEnabled": cau_hinh.sound_alert
 					}
 					self._api_client.update_settings(cau_hinh.device_id, payload)

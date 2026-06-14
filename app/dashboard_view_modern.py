@@ -20,7 +20,9 @@ from .widgets import (
     MAU_CHU_CHINH,
     MAU_CHU_PHU,
     MAU_DUONG_BIEN,
+    MAU_CANH_BAO,
     MAU_NGUY_HIEM,
+    MAU_THANH_CONG,
     FONT_TIEU_DE,
     FONT_NHAN,
     FONT_TIEU_DE_THE,
@@ -166,6 +168,15 @@ class DashboardView(ctk.CTkFrame):
         )
         nhan_tieu_de.pack(anchor="w", pady=(0, 15))
 
+        # Add status label
+        self.nhan_trang_thai = ctk.CTkLabel(
+            trong,
+            text="NORMAL",
+            font=FONT_NOI_DUNG_BOLD,
+            text_color=MAU_THANH_CONG,
+        )
+        self.nhan_trang_thai.pack(anchor="w", pady=(0, 5))
+
         self.nhan_nhiet_do = ctk.CTkLabel(
             trong,
             text="--°C",
@@ -280,14 +291,32 @@ class DashboardView(ctk.CTkFrame):
             temp = float(data.get("temp", 0))
             humidity = float(data.get("humidity", 0))
             
+            # Determine status using centralized logic
+            current_status = self._ds._determine_status(temp, humidity)
+            
             self.nhan_nhiet_do.configure(
                 text=f"{temp:.1f}°C",
                 text_color=mau_theo_nhiet_do(temp)
             )
             self.nhan_gia_tri_do_am.configure(text=f"{humidity:.0f}%")
             
+            # Update status label
+            if current_status == "DANGER":
+                self.nhan_trang_thai.configure(text="DANGER", text_color=MAU_NGUY_HIEM)
+            elif current_status == "WARNING":
+                self.nhan_trang_thai.configure(text="WARNING", text_color=MAU_CANH_BAO)
+            else:
+                self.nhan_trang_thai.configure(text="NORMAL", text_color=MAU_THANH_CONG)
+            
+            # Update threshold display with status-appropriate color
             threshold = settings.warning_threshold
-            mau_nguong = MAU_NGUY_HIEM if temp > threshold else MAU_CHU_CHINH
+            if current_status == "DANGER":
+                mau_nguong = MAU_NGUY_HIEM
+            elif current_status == "WARNING":
+                mau_nguong = MAU_CANH_BAO
+            else:
+                mau_nguong = MAU_CHU_CHINH
+                
             self.nhan_gia_tri_nguong.configure(
                 text=f"{threshold:.1f}°C",
                 text_color=mau_nguong

@@ -6,6 +6,7 @@ import customtkinter as ctk
 import tkinter as tk
 from typing import Callable
 
+from .data_service import DataService
 from .settings_store import AppSettings
 
 from .widgets import (
@@ -25,23 +26,25 @@ from .widgets import (
 
 
 class SettingsView(ctk.CTkFrame):
-	def __init__(self, parent, settings: AppSettings, on_save: Callable[[AppSettings], None]):
+	def __init__(self, parent, data_service: DataService, on_save: Callable[[AppSettings], None]):
 		super().__init__(parent, fg_color=MAU_NEN_SANG)
 		self._on_save = on_save
-		self._settings = settings
+		self._ds = data_service
+		self._settings = data_service.settings
 
-		self.nguong_canh_bao = tk.DoubleVar(value=settings.warning_threshold)
-		self.nguong_nguy_hiem = tk.DoubleVar(value=settings.danger_threshold)
-		self.nguong_do_am = tk.DoubleVar(value=settings.humidity_threshold)
-		self.tan_suat_lay_mau = tk.IntVar(value=max(int(settings.refresh_ms / 1000), 1))
-		self.api_url = tk.StringVar(value=settings.api_base_url)
-		self.can_bao_am_thanh = tk.BooleanVar(value=settings.sound_alert)
-		self.gui_email = tk.BooleanVar(value=settings.email_alert)
+		self.nguong_canh_bao = tk.DoubleVar(value=self._settings.warning_threshold)
+		self.nguong_nguy_hiem = tk.DoubleVar(value=self._settings.danger_threshold)
+		self.nguong_do_am = tk.DoubleVar(value=self._settings.humidity_threshold)
+		self.tan_suat_lay_mau = tk.IntVar(value=max(int(self._settings.refresh_ms / 60000), 1))
+		self.api_url = tk.StringVar(value=self._settings.api_base_url)
+		self.can_bao_am_thanh = tk.BooleanVar(value=self._settings.sound_alert)
+		self.gui_email = tk.BooleanVar(value=self._settings.email_alert)
 
 		self.grid_rowconfigure(0, weight=1)
 		self.grid_columnconfigure(0, weight=1)
 
 		self.tao_noi_dung()
+		self._ds.subscribe(self.cap_nhat_giao_dien)
 
 	def tao_noi_dung(self):
 		khung_chinh = ctk.CTkFrame(self, fg_color=MAU_NEN_SANG, corner_radius=0)
@@ -103,12 +106,12 @@ class SettingsView(ctk.CTkFrame):
 		)
 		self.tao_hang_slider(
 			khung,
-			"Tần suất lấy mẫu (Phút)",
-			self.tan_suat_lay_mau,
-			1,
-			60,
-			is_int=True,
+			"Ngưỡng độ ẩm (%)",
+			self.nguong_do_am,
+			40,
+			100,
 		)
+		self.tao_hang_chon_tan_suat(khung)
 
 	def tao_hang_slider(self, cha, nhan, bien, min_val, max_val, is_int=False):
 		khung = ctk.CTkFrame(cha, fg_color=MAU_THE_BG)
@@ -148,6 +151,26 @@ class SettingsView(ctk.CTkFrame):
 		gia_tri = int(gia_tri) if is_int else round(gia_tri, 1)
 		bien.set(gia_tri)
 		nhan_gia_tri.configure(text=str(gia_tri))
+
+	def tao_hang_chon_tan_suat(self, cha):
+		khung = ctk.CTkFrame(cha, fg_color=MAU_THE_BG)
+		khung.pack(fill="x", pady=10)
+
+		ctk.CTkLabel(
+			khung,
+			text="Tần suất lấy mẫu (Phút)",
+			font=FONT_NOI_DUNG,
+			text_color=MAU_CHU_PHU,
+		).pack(anchor="w")
+
+		self.combo_tan_suat = ctk.CTkComboBox(
+			khung,
+			values=["1", "5", "10", "15", "30"],
+			variable=self.tan_suat_lay_mau,
+			state="readonly",
+			command=lambda value: self.tan_suat_lay_mau.set(int(value)),
+		)
+		self.combo_tan_suat.pack(fill="x", pady=(6, 0))
 
 	def tao_the_ket_noi(self, cha):
 		the = The(cha)
@@ -242,11 +265,25 @@ class SettingsView(ctk.CTkFrame):
 		self._settings.warning_threshold = float(self.nguong_canh_bao.get())
 		self._settings.danger_threshold = float(self.nguong_nguy_hiem.get())
 		self._settings.humidity_threshold = float(self.nguong_do_am.get())
-		self._settings.refresh_ms = int(self.tan_suat_lay_mau.get()) * 1000
+		self._settings.refresh_ms = int(self.tan_suat_lay_mau.get()) * 60000
 		self._settings.sound_alert = bool(self.can_bao_am_thanh.get())
 		self._settings.email_alert = bool(self.gui_email.get())
 
 		self._on_save(self._settings)
 		self.nhan_trang_thai.configure(text="Đã lưu và đồng bộ cấu hình")
+
+	def cap_nhat_giao_dien(self):
+		self.after(0, self._render_ui)
+
+	def _render_ui(self):
+		settings = self._ds.settings
+		self._settings = settings
+		self.nguong_canh_bao.set(settings.warning_threshold)
+		self.nguong_nguy_hiem.set(settings.danger_threshold)
+		self.nguong_do_am.set(settings.humidity_threshold)
+		self.tan_suat_lay_mau.set(max(int(settings.refresh_ms / 60000), 1))
+		self.api_url.set(settings.api_base_url)
+		self.can_bao_am_thanh.set(settings.sound_alert)
+		self.gui_email.set(settings.email_alert)
 
 __all__ = ["SettingsView"]

@@ -52,7 +52,7 @@ def get_device(device_id: str) -> dict:
     db = get_db()
     # Check existence by attempting to pull the data
     # (Since we cannot use limit_to_first/last)
-    data = db.reference(f"iot/dht11_data/{device_id}").get()
+    data = db.reference(f"sensor_data/{device_id}").get()
     if data:
         return {"exists": True, "device_id": device_id}
     return {"exists": False, "device_id": device_id}

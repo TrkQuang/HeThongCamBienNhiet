@@ -5,6 +5,7 @@ from .api_client import ApiClient
 from .settings_store import AppSettings
 from firebase.client import get_db
 
+
 class DataService:
     def __init__(self, api_client: ApiClient, settings: AppSettings):
         self._api_client = api_client
@@ -24,6 +25,12 @@ class DataService:
         self._settings_ref = None
         self._data_listener = None
         self._settings_listener = None
+
+        # Measure‑status handling
+        self._measure_status: Optional[str] = None  # "pending", "success", "timeout"
+        self._measure_lock = threading.Lock()
+        self._last_measure_ts: float = 0
+        self._measure_subscribers: List[Callable] = []
 
         # Initial load & listeners
         if self._device_id:
@@ -49,6 +56,24 @@ class DataService:
                 cb()
             except Exception as e:
                 print(f"[DataService] Error notifying subscriber: {e}")
+
+    # Measure‑status subscriptions
+    def subscribe_measure_status(self, callback: Callable):
+        if callback not in self._measure_subscribers:
+            self._measure_subscribers.append(callback)
+            if self._measure_status:
+                callback()
+
+    def unsubscribe_measure_status(self, callback: Callable):
+        if callback in self._measure_subscribers:
+            self._measure_subscribers.remove(callback)
+
+    def _notify_measure_subscribers(self):
+        for cb in self._measure_subscribers:
+            try:
+                cb()
+            except Exception as e:
+                print(f"[DataService] Measure status notify error: {e}")
 
     # -----------------------------------------------------------------
     # Settings update (device switch, threshold changes, etc.)
@@ -89,8 +114,23 @@ class DataService:
             self._settings_ref = db.reference(f"settings/{self._device_id}")
 
             def data_cb(event):
-                print(f"[DataService] Sensor realtime update detected for {self._device_id}")
+                print(f"[DataService] Sensor realtime update detected for {self._device_id}. Event data: {event.data}")
                 self.refresh_all()
+                # if a forced measurement was pending, consider it successful
+                with self._measure_lock:
+                    if self._measure_status == "pending":
+                        self._measure_status = "success"
+                        self._notify_measure_subscribers()
+                        # Update Firebase log
+                        try:
+                            db = get_db()
+                            requests_ref = db.reference(f"measure_requests/{self._device_id}")
+                            last_req = requests_ref.order_by_child("ts").limit_to_last(1).get()
+                            if last_req:
+                                key = list(last_req.keys())[0]
+                                requests_ref.child(key).update({"status": "success", "resolved_at": int(time.time())})
+                        except Exception:
+                            pass
 
             def settings_cb(event):
                 print(f"[DataService] Settings realtime update detected for {self._device_id}")
@@ -98,6 +138,7 @@ class DataService:
                 self._apply_remote_settings(data)
                 self._refresh_ai_suggestion()
                 self._notify_subscribers()
+                self._notify_measure_subscribers()
 
             self._data_listener = self._data_ref.listen(data_cb)
             self._settings_listener = self._settings_ref.listen(settings_cb)
@@ -154,8 +195,6 @@ class DataService:
     # -----------------------------------------------------------------
     def _log_alert(self, status: str, reading: Dict[str, Any]) -> None:
         from firebase.alert_repo import save_alert
-        # Fill required AlertOut fields with safe defaults.
-        # avg_temp – use current temperature as a placeholder if not available.
         avg_temp = reading.get("temp")
         alert_payload = {
             "timestamp": reading.get("timestamp") or reading.get("ts"),
@@ -231,12 +270,75 @@ class DataService:
             self._settings.refresh_ms = minutes * 60000
 
         # danger temperature threshold – compute locally, do NOT push to backend
-        # because the backend DeviceSettings model does not include this field.
         if data.get("dangerTemperatureThreshold") is not None:
             self._settings.danger_threshold = float(data["dangerTemperatureThreshold"])
         else:
             # default: warning + 5°C (local only)
             self._settings.danger_threshold = self._settings.warning_threshold + 5.0
+
+    # -----------------------------------------------------------------
+    # Measure‑status control
+    # -----------------------------------------------------------------
+    def request_immediate_measure(self):
+        """Write forceMeasure=1 flag into Firebase settings node."""
+        print(f"[DataService] request_immediate_measure called for {self._device_id}")
+        if not self._device_id:
+            print("[DataService] request_immediate_measure ignored - no device_id")
+            return
+
+        with self._measure_lock:
+            now = time.time()
+            if now - self._last_measure_ts < 5:
+                print("[DataService] Immediate measure request ignored (spam protection).")
+                return
+            self._last_measure_ts = now
+            self._measure_status = "pending"
+            self._notify_measure_subscribers()
+
+        try:
+            db = get_db()
+            # Write forceMeasure flag (1 = trigger, sau khi ESP nhận sẽ tự về 0)
+            flag_ref = db.reference(f"settings/{self._device_id}/forceMeasure")
+            flag_ref.set(1)
+            
+            # Log the request timestamp for correlation
+            requests_ref = db.reference(f"measure_requests/{self._device_id}")
+            requests_ref.push({"ts": int(time.time()), "status": "pending"})
+            
+            print(f"[DataService] forceMeasure=1 written for {self._device_id}")
+        except Exception as e:
+            print(f"[DataService] Failed to set forceMeasure flag: {e}")
+            with self._measure_lock:
+                self._measure_status = "timeout"
+                self._notify_measure_subscribers()
+            return
+
+        def timeout_watcher(start_ts):
+            time.sleep(10)
+            with self._measure_lock:
+                if self._measure_status == "pending" and self._last_measure_ts == start_ts:
+                    self._measure_status = "timeout"
+                    self._notify_measure_subscribers()
+                    # Update Firebase log
+                    try:
+                        db = get_db()
+                        requests_ref = db.reference(f"measure_requests/{self._device_id}")
+                        last_req = requests_ref.order_by_child("ts").limit_to_last(1).get()
+                        if last_req:
+                            key = list(last_req.keys())[0]
+                            last_req[key]["status"] = "timeout"
+                            requests_ref.child(key).update({"status": "timeout"})
+                    except Exception:
+                        pass
+
+        threading.Thread(target=timeout_watcher, args=(now,), daemon=True).start()
+
+    def mark_measure_success(self):
+        """Called when a new sensor reading arrives after a forced measure."""
+        with self._measure_lock:
+            if self._measure_status == "pending":
+                self._measure_status = "success"
+                self._notify_measure_subscribers()
 
     @property
     def device_id(self) -> Optional[str]:

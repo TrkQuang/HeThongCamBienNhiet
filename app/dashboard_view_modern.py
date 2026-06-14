@@ -92,6 +92,7 @@ class DashboardView(ctk.CTkFrame):
         
         # Subscribe to centralized data service
         self._ds.subscribe(self.cap_nhat_giao_dien)
+        self._ds.subscribe_measure_status(self.cap_nhat_trang_thai_do)
 
     def tao_noi_dung_chinh(self):
         khung_chinh = ctk.CTkFrame(self, fg_color=MAU_NEN_SANG, corner_radius=0)
@@ -185,6 +186,28 @@ class DashboardView(ctk.CTkFrame):
         )
         self.nhan_nhiet_do.pack(pady=(10, 20))
 
+        # Đo ngay button
+        self.nut_do_ngay = ctk.CTkButton(
+            trong,
+            text="📡 Đo ngay",
+            font=FONT_NOI_DUNG_BOLD,
+            fg_color=MAU_CHINH,
+            hover_color=MAU_CHINH_HOVER,
+            height=36,
+            width=160,
+            command=self._ds.request_immediate_measure,
+        )
+        self.nut_do_ngay.pack(pady=(0, 10))
+
+        # Trạng thái đo
+        self.nhan_trang_thai_do = ctk.CTkLabel(
+            trong,
+            text="",
+            font=FONT_NOI_DUNG,
+            text_color=MAU_CHU_PHU,
+        )
+        self.nhan_trang_thai_do.pack(pady=(0, 5))
+
         duong_ngan = ctk.CTkFrame(trong, height=1, fg_color=MAU_DUONG_BIEN)
         duong_ngan.pack(fill="x", pady=15)
 
@@ -272,6 +295,25 @@ class DashboardView(ctk.CTkFrame):
 
         self.khung_dong_thoi_gian = ctk.CTkFrame(the, fg_color=MAU_THE_BG)
         self.khung_dong_thoi_gian.pack(fill="both", expand=True, padx=25, pady=(0, 25))
+
+    def cap_nhat_trang_thai_do(self):
+        """Callback for measure status updates."""
+        self.after(0, self._render_trang_thai_do)
+
+    def _render_trang_thai_do(self):
+        status = getattr(self._ds, "measure_status", None)
+        if status == "pending":
+            self.nut_do_ngay.configure(state="disabled", text="⏳ Đang đo...")
+            self.nhan_trang_thai_do.configure(text="Đang yêu cầu thiết bị đo...", text_color=MAU_CANH_BAO)
+        elif status == "success":
+            self.nut_do_ngay.configure(state="normal", text="📡 Đo ngay")
+            self.nhan_trang_thai_do.configure(text="✅ Đo thành công!", text_color=MAU_THANH_CONG)
+        elif status == "timeout":
+            self.nut_do_ngay.configure(state="normal", text="📡 Đo ngay")
+            self.nhan_trang_thai_do.configure(text="⚠️ Thiết bị không phản hồi", text_color=MAU_NGUY_HIEM)
+        else:
+            self.nut_do_ngay.configure(state="normal", text="📡 Đo ngay")
+            self.nhan_trang_thai_do.configure(text="", text_color=MAU_CHU_PHU)
 
     def cap_nhat_giao_dien(self):
         """Callback from DataService when data changes."""

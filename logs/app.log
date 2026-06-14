@@ -3538,3 +3538,31 @@ avg_temp
 2026-06-14 19:51:24,943 [INFO] [alert_repo] 13 valid alerts, 1 malformed skipped for 1109010
 2026-06-14 19:51:33,671 [WARNING] [alert_repo] Skipping non‑dict alert entry: ''
 2026-06-14 19:51:33,671 [INFO] [alert_repo] 13 valid alerts, 1 malformed skipped for 1109010
+2026-06-14 20:23:22,064 [WARNING] [alert_repo] Skipping non‑dict alert entry: ''
+2026-06-14 20:23:22,066 [INFO] [alert_repo] 14 valid alerts, 1 malformed skipped for 1109010
+2026-06-14 20:23:22,477 [WARNING] [alert_repo] Skipping non‑dict alert entry: ''
+2026-06-14 20:23:22,477 [INFO] [alert_repo] 14 valid alerts, 1 malformed skipped for 1109010
+2026-06-14 20:23:22,982 [WARNING] [alert_repo] Skipping non‑dict alert entry: ''
+2026-06-14 20:23:22,982 [INFO] [alert_repo] 14 valid alerts, 1 malformed skipped for 1109010
+2026-06-14 20:23:32,201 [WARNING] [alert_repo] Skipping non‑dict alert entry: ''
+2026-06-14 20:23:32,201 [INFO] [alert_repo] 15 valid alerts, 1 malformed skipped for 1109010
+2026-06-14 20:26:25,495 [WARNING] [alert_repo] Skipping non‑dict alert entry: ''
+2026-06-14 20:26:25,496 [INFO] [alert_repo] 15 valid alerts, 1 malformed skipped for 1109010
+2026-06-14 21:13:33,084 [WARNING] [alert_repo] Skipping non‑dict alert entry: ''
+2026-06-14 21:13:33,087 [INFO] [alert_repo] 16 valid alerts, 1 malformed skipped for 1109010
+2026-06-14 21:13:33,597 [WARNING] [alert_repo] Skipping non‑dict alert entry: ''
+2026-06-14 21:13:33,598 [INFO] [alert_repo] 16 valid alerts, 1 malformed skipped for 1109010
+2026-06-14 21:13:34,269 [WARNING] [alert_repo] Skipping non‑dict alert entry: ''
+2026-06-14 21:13:34,269 [INFO] [alert_repo] 16 valid alerts, 1 malformed skipped for 1109010
+2026-06-14 21:13:47,274 [WARNING] [alert_repo] Skipping non‑dict alert entry: ''
+2026-06-14 21:13:47,275 [INFO] [alert_repo] 16 valid alerts, 1 malformed skipped for 1109010
+2026-06-14 21:16:25,593 [WARNING] [alert_repo] Skipping non‑dict alert entry: ''
+2026-06-14 21:16:25,594 [INFO] [alert_repo] 16 valid alerts, 1 malformed skipped for 1109010
+2026-06-14 21:20:52,201 [WARNING] [alert_repo] Skipping non‑dict alert entry: ''
+2026-06-14 21:20:52,204 [INFO] [alert_repo] 17 valid alerts, 1 malformed skipped for 1109010
+2026-06-14 21:20:52,629 [WARNING] [alert_repo] Skipping non‑dict alert entry: ''
+2026-06-14 21:20:52,630 [INFO] [alert_repo] 17 valid alerts, 1 malformed skipped for 1109010
+2026-06-14 21:20:53,094 [WARNING] [alert_repo] Skipping non‑dict alert entry: ''
+2026-06-14 21:20:53,094 [INFO] [alert_repo] 17 valid alerts, 1 malformed skipped for 1109010
+2026-06-14 21:21:24,600 [WARNING] [alert_repo] Skipping non‑dict alert entry: ''
+2026-06-14 21:21:24,600 [INFO] [alert_repo] 17 valid alerts, 1 malformed skipped for 1109010

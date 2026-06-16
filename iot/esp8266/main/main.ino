@@ -105,9 +105,13 @@ void loop() {
     thoi_gian_check_fb = hien_tai; 
     String pathSetting = "/settings/" + String(id_chip);
 
-    // 1.2 Kiểm tra và cập nhật chu kỳ đo (thoi_gian_do)
+    // 1.1 Kiểm tra và cập nhật chu kỳ đo (thoi_gian_do)
     if (Firebase.getInt(fbdo, pathSetting + "/samplingInterval")) {
-      thoi_gian_do = fbdo.intData() * 60000;
+      thoi_gian_do = fbdo.intData() * 60000L;
+    } 
+    // 1.2 kiểm tra và thực hiện đo ( khi có lệnh đo từ nút ấn)
+    if (Firebase.getInt(fbdo, pathSetting + "/forceMeasure")) {
+      ThucHienDoVaGui();
     } 
   }
 

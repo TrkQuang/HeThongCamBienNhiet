@@ -1,289 +1,114 @@
-"""
-Man hinh cai dat - giao dien hien dai
-"""
-
 import customtkinter as ctk
 import tkinter as tk
 from typing import Callable
-
 from .data_service import DataService
 from .settings_store import AppSettings
-
-from .widgets import (
-	MAU_NEN_SANG,
-	MAU_THE_BG,
-	MAU_CHINH,
-	MAU_CHINH_HOVER,
-	MAU_CHU_CHINH,
-	MAU_CHU_PHU,
-	MAU_DUONG_BIEN,
-	FONT_TIEU_DE,
-	FONT_TIEU_DE_THE,
-	FONT_NOI_DUNG,
-	FONT_NOI_DUNG_BOLD,
-	The,
-)
-
+from .widgets import *
 
 class SettingsView(ctk.CTkFrame):
-	def __init__(self, parent, data_service: DataService, on_save: Callable[[AppSettings], None]):
-		super().__init__(parent, fg_color=MAU_NEN_SANG)
-		self._on_save = on_save
-		self._ds = data_service
-		self._settings = data_service.settings
+    def __init__(self, parent, data_service: DataService, on_save: Callable[[AppSettings], None]):
+        super().__init__(parent, fg_color=MAU_NEN_SANG)
+        self._on_save = on_save
+        self._ds = data_service
+        self._set = data_service.settings
+        self.ng_cb = tk.DoubleVar(value=self._set.warning_threshold)
+        self.ng_nh = tk.DoubleVar(value=self._set.danger_threshold)
+        self.ng_da = tk.DoubleVar(value=self._set.humidity_threshold)
+        self.ts = tk.IntVar(value=max(int(self._set.refresh_ms / 60000), 1))
+        self.api = tk.StringVar(value=self._set.api_base_url)
+        self.cb_am = tk.BooleanVar(value=self._set.sound_alert)
+        self.cb_em = tk.BooleanVar(value=self._set.email_alert)
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_columnconfigure(0, weight=1)
+        self.tao_noi_dung()
+        self._ds.subscribe(self.cap_nhat_giao_dien)
 
-		self.nguong_canh_bao = tk.DoubleVar(value=self._settings.warning_threshold)
-		self.nguong_nguy_hiem = tk.DoubleVar(value=self._settings.danger_threshold)
-		self.nguong_do_am = tk.DoubleVar(value=self._settings.humidity_threshold)
-		self.tan_suat_lay_mau = tk.IntVar(value=max(int(self._settings.refresh_ms / 60000), 1))
-		self.api_url = tk.StringVar(value=self._settings.api_base_url)
-		self.can_bao_am_thanh = tk.BooleanVar(value=self._settings.sound_alert)
-		self.gui_email = tk.BooleanVar(value=self._settings.email_alert)
+    def tao_noi_dung(self):
+        kc = ctk.CTkFrame(self, fg_color=MAU_NEN_SANG, corner_radius=0)
+        kc.grid(row=0, column=0, sticky="nsew")
+        kc.grid_rowconfigure(1, weight=1)
+        kc.grid_columnconfigure(0, weight=1)
+        td = ctk.CTkFrame(kc, fg_color=MAU_NEN_SANG, corner_radius=0)
+        td.grid(row=0, column=0, sticky="ew", padx=20, pady=20)
+        ctk.CTkLabel(td, text="Cài đặt hệ thống", font=FONT_TIEU_DE, text_color=MAU_CHU_CHINH).pack(side="left")
+        kn = ctk.CTkFrame(kc, fg_color=MAU_NEN_SANG, corner_radius=0)
+        kn.grid(row=1, column=0, sticky="nsew", padx=20, pady=20)
+        kn.grid_rowconfigure(0, weight=1)
+        kn.grid_columnconfigure((0, 1), weight=1)
+        self.tao_the_nd(kn)
+        self.tao_the_kn(kn)
+        hd = ctk.CTkFrame(kn, fg_color=MAU_NEN_SANG, corner_radius=0)
+        hd.grid(row=1, column=0, columnspan=2, sticky="ew")
+        hd.grid_columnconfigure(0, weight=1)
+        self.l_st = ctk.CTkLabel(hd, text="", font=FONT_NOI_DUNG, text_color=MAU_CHU_PHU)
+        self.l_st.pack(side="left", padx=10)
+        ctk.CTkButton(hd, text="Lưu cấu hình", font=FONT_NOI_DUNG_BOLD, fg_color=MAU_CHINH, hover_color=MAU_CHINH_HOVER, command=self.luu, height=42).pack(anchor="e", padx=10, pady=10)
 
-		self.grid_rowconfigure(0, weight=1)
-		self.grid_columnconfigure(0, weight=1)
+    def tao_the_nd(self, cha):
+        the = The(cha)
+        the.grid(row=0, column=0, sticky="nsew", padx=(0, 15), pady=(0, 15))
+        k = ctk.CTkFrame(the, fg_color=MAU_THE_BG)
+        k.pack(fill="both", expand=True, padx=20, pady=20)
+        ctk.CTkLabel(k, text="Cấu hình ngưỡng", font=FONT_TIEU_DE_THE, text_color=MAU_CHU_CHINH).pack(anchor="w", pady=(0, 15))
+        self.tao_sld(k, "Ngưỡng cảnh báo (°C)", self.ng_cb, 20, 45)
+        self.tao_sld(k, "Ngưỡng nguy hiểm (°C)", self.ng_nh, 30, 55)
+        self.tao_sld(k, "Ngưỡng độ ẩm (%)", self.ng_da, 40, 100)
+        t = ctk.CTkFrame(k, fg_color=MAU_THE_BG)
+        t.pack(fill="x", pady=10)
+        ctk.CTkLabel(t, text="Tần suất lấy mẫu (Phút)", font=FONT_NOI_DUNG, text_color=MAU_CHU_PHU).pack(anchor="w")
+        ctk.CTkComboBox(t, values=["1", "5", "10", "15", "30"], variable=self.ts, state="readonly", command=lambda v: self.ts.set(int(v))).pack(fill="x", pady=(6, 0))
 
-		self.tao_noi_dung()
-		self._ds.subscribe(self.cap_nhat_giao_dien)
+    def tao_sld(self, cha, nhan, var, min_v, max_v):
+        k = ctk.CTkFrame(cha, fg_color=MAU_THE_BG)
+        k.pack(fill="x", pady=10)
+        ctk.CTkLabel(k, text=nhan, font=FONT_NOI_DUNG, text_color=MAU_CHU_PHU).pack(anchor="w")
+        kg = ctk.CTkFrame(k, fg_color=MAU_THE_BG)
+        kg.pack(fill="x", pady=(6, 0))
+        l_v = ctk.CTkLabel(kg, text=str(round(var.get(), 1)), font=FONT_NOI_DUNG_BOLD, text_color=MAU_CHU_CHINH, width=60)
+        sl = ctk.CTkSlider(kg, from_=min_v, to=max_v, command=lambda v: [var.set(round(v, 1)), l_v.configure(text=str(round(v, 1)))])
+        sl.pack(side="left", fill="x", expand=True, padx=(0, 10))
+        sl.set(var.get())
+        l_v.pack(side="right")
 
-	def tao_noi_dung(self):
-		khung_chinh = ctk.CTkFrame(self, fg_color=MAU_NEN_SANG, corner_radius=0)
-		khung_chinh.grid(row=0, column=0, sticky="nsew")
-		khung_chinh.grid_rowconfigure(0, weight=0)
-		khung_chinh.grid_rowconfigure(1, weight=1)
-		khung_chinh.grid_columnconfigure(0, weight=1)
+    def tao_the_kn(self, cha):
+        the = The(cha)
+        the.grid(row=0, column=1, sticky="nsew", pady=(0, 15))
+        k = ctk.CTkFrame(the, fg_color=MAU_THE_BG)
+        k.pack(fill="both", expand=True, padx=20, pady=20)
+        ctk.CTkLabel(k, text="Kết nối và thông báo", font=FONT_TIEU_DE_THE, text_color=MAU_CHU_CHINH).pack(anchor="w", pady=(0, 15))
+        h = ctk.CTkFrame(k, fg_color=MAU_THE_BG)
+        h.pack(fill="x", pady=10)
+        ctk.CTkLabel(h, text="API URL", font=FONT_NOI_DUNG, text_color=MAU_CHU_PHU).pack(anchor="w")
+        ctk.CTkEntry(h, textvariable=self.api, border_color=MAU_DUONG_BIEN).pack(fill="x", pady=(6, 0))
+        ctk.CTkFrame(k, height=1, fg_color=MAU_DUONG_BIEN).pack(fill="x", pady=15)
+        for text, var in [("Bật cảnh báo âm thanh", self.cb_am), ("Gửi email khi nguy hiểm", self.cb_em)]:
+            h2 = ctk.CTkFrame(k, fg_color=MAU_THE_BG)
+            h2.pack(fill="x", pady=8)
+            ctk.CTkLabel(h2, text=text, font=FONT_NOI_DUNG, text_color=MAU_CHU_PHU).pack(side="left")
+            ctk.CTkSwitch(h2, text="", variable=var, progress_color=MAU_CHINH).pack(side="right")
 
-		tieu_de = ctk.CTkFrame(khung_chinh, fg_color=MAU_NEN_SANG, corner_radius=0)
-		tieu_de.grid(row=0, column=0, sticky="ew", padx=20, pady=20)
-		tieu_de.grid_columnconfigure(0, weight=1)
+    def luu(self):
+        self._set.api_base_url = self.api.get().strip().rstrip("/")
+        self._set.warning_threshold = float(self.ng_cb.get())
+        self._set.danger_threshold = float(self.ng_nh.get())
+        self._set.humidity_threshold = float(self.ng_da.get())
+        self._set.refresh_ms = int(self.ts.get()) * 60000
+        self._set.sound_alert = bool(self.cb_am.get())
+        self._set.email_alert = bool(self.cb_em.get())
+        self._on_save(self._set)
+        self.l_st.configure(text="Đã lưu và đồng bộ cấu hình")
 
-		nhan_tieu_de = ctk.CTkLabel(
-			tieu_de,
-			text="Cài đặt hệ thống",
-			font=FONT_TIEU_DE,
-			text_color=MAU_CHU_CHINH,
-		)
-		nhan_tieu_de.pack(side="left", anchor="w")
+    def cap_nhat_giao_dien(self):
+        self.after(0, self._render)
 
-		khung_noi_dung = ctk.CTkFrame(khung_chinh, fg_color=MAU_NEN_SANG, corner_radius=0)
-		khung_noi_dung.grid(row=1, column=0, sticky="nsew", padx=20, pady=20)
-		khung_noi_dung.grid_rowconfigure(0, weight=1)
-		khung_noi_dung.grid_columnconfigure(0, weight=1)
-		khung_noi_dung.grid_columnconfigure(1, weight=1)
-
-		self.tao_the_nhiet_do(khung_noi_dung)
-		self.tao_the_ket_noi(khung_noi_dung)
-		self.tao_khung_hanh_dong(khung_noi_dung)
-
-	def tao_the_nhiet_do(self, cha):
-		the = The(cha)
-		the.grid(row=0, column=0, sticky="nsew", padx=(0, 15), pady=(0, 15))
-
-		khung = ctk.CTkFrame(the, fg_color=MAU_THE_BG)
-		khung.pack(fill="both", expand=True, padx=20, pady=20)
-
-		nhan = ctk.CTkLabel(
-			khung,
-			text="Cấu hình ngưỡng",
-			font=FONT_TIEU_DE_THE,
-			text_color=MAU_CHU_CHINH,
-		)
-		nhan.pack(anchor="w", pady=(0, 15))
-
-		self.tao_hang_slider(
-			khung,
-			"Ngưỡng cảnh báo (°C)",
-			self.nguong_canh_bao,
-			20,
-			45,
-		)
-		self.tao_hang_slider(
-			khung,
-			"Ngưỡng nguy hiểm (°C)",
-			self.nguong_nguy_hiem,
-			30,
-			55,
-		)
-		self.tao_hang_slider(
-			khung,
-			"Ngưỡng độ ẩm (%)",
-			self.nguong_do_am,
-			40,
-			100,
-		)
-		self.tao_hang_chon_tan_suat(khung)
-
-	def tao_hang_slider(self, cha, nhan, bien, min_val, max_val, is_int=False):
-		khung = ctk.CTkFrame(cha, fg_color=MAU_THE_BG)
-		khung.pack(fill="x", pady=10)
-
-		nhan_trai = ctk.CTkLabel(
-			khung,
-			text=nhan,
-			font=FONT_NOI_DUNG,
-			text_color=MAU_CHU_PHU,
-		)
-		nhan_trai.pack(anchor="w")
-
-		khung_gia_tri = ctk.CTkFrame(khung, fg_color=MAU_THE_BG)
-		khung_gia_tri.pack(fill="x", pady=(6, 0))
-
-		thanh_truot = ctk.CTkSlider(
-			khung_gia_tri,
-			from_=min_val,
-			to=max_val,
-			number_of_steps=(max_val - min_val) if is_int else None,
-			command=lambda gia_tri: self.cap_nhat_slider(bien, gia_tri, nhan_gia_tri, is_int),
-		)
-		thanh_truot.pack(side="left", fill="x", expand=True, padx=(0, 10))
-		thanh_truot.set(bien.get())
-
-		nhan_gia_tri = ctk.CTkLabel(
-			khung_gia_tri,
-			text=str(int(bien.get()) if is_int else round(bien.get(), 1)),
-			font=FONT_NOI_DUNG_BOLD,
-			text_color=MAU_CHU_CHINH,
-			width=60,
-		)
-		nhan_gia_tri.pack(side="right")
-
-	def cap_nhat_slider(self, bien, gia_tri, nhan_gia_tri, is_int):
-		gia_tri = int(gia_tri) if is_int else round(gia_tri, 1)
-		bien.set(gia_tri)
-		nhan_gia_tri.configure(text=str(gia_tri))
-
-	def tao_hang_chon_tan_suat(self, cha):
-		khung = ctk.CTkFrame(cha, fg_color=MAU_THE_BG)
-		khung.pack(fill="x", pady=10)
-
-		ctk.CTkLabel(
-			khung,
-			text="Tần suất lấy mẫu (Phút)",
-			font=FONT_NOI_DUNG,
-			text_color=MAU_CHU_PHU,
-		).pack(anchor="w")
-
-		self.combo_tan_suat = ctk.CTkComboBox(
-			khung,
-			values=["1", "5", "10", "15", "30"],
-			variable=self.tan_suat_lay_mau,
-			state="readonly",
-			command=lambda value: self.tan_suat_lay_mau.set(int(value)),
-		)
-		self.combo_tan_suat.pack(fill="x", pady=(6, 0))
-
-	def tao_the_ket_noi(self, cha):
-		the = The(cha)
-		the.grid(row=0, column=1, sticky="nsew", pady=(0, 15))
-
-		khung = ctk.CTkFrame(the, fg_color=MAU_THE_BG)
-		khung.pack(fill="both", expand=True, padx=20, pady=20)
-
-		nhan = ctk.CTkLabel(
-			khung,
-			text="Kết nối và thông báo",
-			font=FONT_TIEU_DE_THE,
-			text_color=MAU_CHU_CHINH,
-		)
-		nhan.pack(anchor="w", pady=(0, 15))
-
-		self.tao_hang_entry(khung, "API URL", self.api_url)
-
-		duong_ngan = ctk.CTkFrame(khung, height=1, fg_color=MAU_DUONG_BIEN)
-		duong_ngan.pack(fill="x", pady=15)
-
-		self.tao_hang_switch(khung, "Bật cảnh báo âm thanh", self.can_bao_am_thanh)
-		self.tao_hang_switch(khung, "Gửi email khi nguy hiểm", self.gui_email)
-
-	def tao_hang_entry(self, cha, nhan, bien):
-		khung = ctk.CTkFrame(cha, fg_color=MAU_THE_BG)
-		khung.pack(fill="x", pady=10)
-
-		nhan_trai = ctk.CTkLabel(
-			khung,
-			text=nhan,
-			font=FONT_NOI_DUNG,
-			text_color=MAU_CHU_PHU,
-		)
-		nhan_trai.pack(anchor="w")
-
-		entry = ctk.CTkEntry(
-			khung,
-			textvariable=bien,
-			border_color=MAU_DUONG_BIEN,
-		)
-		entry.pack(fill="x", pady=(6, 0))
-
-	def tao_hang_switch(self, cha, nhan, bien):
-		khung = ctk.CTkFrame(cha, fg_color=MAU_THE_BG)
-		khung.pack(fill="x", pady=8)
-
-		nhan_trai = ctk.CTkLabel(
-			khung,
-			text=nhan,
-			font=FONT_NOI_DUNG,
-			text_color=MAU_CHU_PHU,
-		)
-		nhan_trai.pack(side="left")
-
-		cong_tac = ctk.CTkSwitch(
-			khung,
-			text="",
-			variable=bien,
-			onvalue=True,
-			offvalue=False,
-			progress_color=MAU_CHINH,
-		)
-		cong_tac.pack(side="right")
-
-	def tao_khung_hanh_dong(self, cha):
-		khung = ctk.CTkFrame(cha, fg_color=MAU_NEN_SANG, corner_radius=0)
-		khung.grid(row=1, column=0, columnspan=2, sticky="ew")
-		khung.grid_columnconfigure(0, weight=1)
-
-		self.nhan_trang_thai = ctk.CTkLabel(
-			khung,
-			text="",
-			font=FONT_NOI_DUNG,
-			text_color=MAU_CHU_PHU,
-		)
-		self.nhan_trang_thai.pack(side="left", padx=10)
-
-		nut_luu = ctk.CTkButton(
-			khung,
-			text="Lưu cấu hình",
-			font=FONT_NOI_DUNG_BOLD,
-			fg_color=MAU_CHINH,
-			hover_color=MAU_CHINH_HOVER,
-			command=self.luu_cau_hinh,
-			height=42,
-		)
-		nut_luu.pack(anchor="e", padx=10, pady=10)
-
-	def luu_cau_hinh(self):
-		self._settings.api_base_url = self.api_url.get().strip().rstrip("/")
-		self._settings.warning_threshold = float(self.nguong_canh_bao.get())
-		self._settings.danger_threshold = float(self.nguong_nguy_hiem.get())
-		self._settings.humidity_threshold = float(self.nguong_do_am.get())
-		self._settings.refresh_ms = int(self.tan_suat_lay_mau.get()) * 60000
-		self._settings.sound_alert = bool(self.can_bao_am_thanh.get())
-		self._settings.email_alert = bool(self.gui_email.get())
-
-		self._on_save(self._settings)
-		self.nhan_trang_thai.configure(text="Đã lưu và đồng bộ cấu hình")
-
-	def cap_nhat_giao_dien(self):
-		self.after(0, self._render_ui)
-
-	def _render_ui(self):
-		settings = self._ds.settings
-		self._settings = settings
-		self.nguong_canh_bao.set(settings.warning_threshold)
-		self.nguong_nguy_hiem.set(settings.danger_threshold)
-		self.nguong_do_am.set(settings.humidity_threshold)
-		self.tan_suat_lay_mau.set(max(int(settings.refresh_ms / 60000), 1))
-		self.api_url.set(settings.api_base_url)
-		self.can_bao_am_thanh.set(settings.sound_alert)
-		self.gui_email.set(settings.email_alert)
+    def _render(self):
+        self._set = self._ds.settings
+        self.ng_cb.set(self._set.warning_threshold)
+        self.ng_nh.set(self._set.danger_threshold)
+        self.ng_da.set(self._set.humidity_threshold)
+        self.ts.set(max(int(self._set.refresh_ms / 60000), 1))
+        self.api.set(self._set.api_base_url)
+        self.cb_am.set(self._set.sound_alert)
+        self.cb_em.set(self._set.email_alert)
 
 __all__ = ["SettingsView"]

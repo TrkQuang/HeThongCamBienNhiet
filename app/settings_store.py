@@ -1,14 +1,10 @@
 from __future__ import annotations
-
-import json
-import os
+import json, os
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List
 
-
-_SETTINGS_PATH = Path("devices.json")
-
+_DUONG_DAN = Path("devices.json")
 
 @dataclass
 class AppSettings:
@@ -22,55 +18,30 @@ class AppSettings:
     sound_alert: bool = True
     email_alert: bool = False
 
-
-def _load_yaml_settings() -> Dict[str, Any]:
-    path = Path("config/settings.yaml")
-    if not path.is_file():
-        return {}
-
+def _doan_api_url() -> str:
+    # Ưu tiên biến môi trường, fallback settings.yaml
+    env_url = os.getenv("API_BASE_URL")
+    if env_url: return env_url.strip().rstrip("/")
     try:
         import yaml
-
-        with path.open("r", encoding="utf-8") as handle:
-            return yaml.safe_load(handle) or {}
-    except Exception:
-        return {}
-
-
-def _guess_api_base_url() -> str:
-    env_url = os.getenv("API_BASE_URL")
-    if env_url:
-        return env_url.strip().rstrip("/")
-
-    settings = _load_yaml_settings()
-    api_settings = settings.get("api", {})
-    host = api_settings.get("host", "127.0.0.1")
-    port = api_settings.get("port", 5000)
-    if host in {"0.0.0.0", "::"}:
-        host = "127.0.0.1"
-    return f"http://{host}:{port}"
-
+        cau_hinh = yaml.safe_load(Path("config/settings.yaml").read_text(encoding="utf-8")) or {}
+        api = cau_hinh.get("api", {})
+        host = api.get("host", "127.0.0.1")
+        port = api.get("port", 5000)
+        if host in {"0.0.0.0", "::"}: host = "127.0.0.1"
+        return f"http://{host}:{port}"
+    except: return "http://127.0.0.1:5000"
 
 def load_settings() -> AppSettings:
-    settings = AppSettings(api_base_url=_guess_api_base_url())
-
-    if _SETTINGS_PATH.is_file():
+    cai_dat = AppSettings(api_base_url=_doan_api_url())
+    if _DUONG_DAN.is_file():
         try:
-            data = json.loads(_SETTINGS_PATH.read_text(encoding="utf-8"))
-        except Exception:
-            data = {}
-        for key, value in data.items():
-            if hasattr(settings, key):
-                setattr(settings, key, value)
+            du_lieu = json.loads(_DUONG_DAN.read_text(encoding="utf-8"))
+            for k, v in du_lieu.items():
+                if hasattr(cai_dat, k): setattr(cai_dat, k, v)
+        except: pass
+    return cai_dat
 
-    # Ensure defaults like devices exist even if file is empty
-    if not settings.devices:
-        settings.devices = []
-
-    return settings
-
-
-def save_settings(settings: AppSettings) -> None:
-    _SETTINGS_PATH.parent.mkdir(parents=True, exist_ok=True)
-    payload = asdict(settings)
-    _SETTINGS_PATH.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+def save_settings(cai_dat: AppSettings):
+    _DUONG_DAN.parent.mkdir(parents=True, exist_ok=True)
+    _DUONG_DAN.write_text(json.dumps(asdict(cai_dat), ensure_ascii=False, indent=2), encoding="utf-8")

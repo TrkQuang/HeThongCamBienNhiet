@@ -1,38 +1,23 @@
-from fastapi import APIRouter, status, HTTPException
-from fastapi.responses import JSONResponse
-from pydantic import BaseModel
 import hashlib
-
+from fastapi import APIRouter, status
 from firebase.user_repo import create_user, get_user_by_username
-from .schemas import UserLogin, UserRegister, ApiResponse, ErrorResponse
+from .schemas import UserLogin, UserRegister
+from .utils import res_err, res_ok
 
 router = APIRouter()
 
-def hash_password(password: str) -> str:
-    return hashlib.sha256(password.encode()).hexdigest()
+def hash_mat_khau(mat_khau: str) -> str:
+    return hashlib.sha256(mat_khau.encode()).hexdigest()
 
-@router.post("/api/auth/register")
+@router.post("/api/auth/register", status_code=status.HTTP_201_CREATED)
 def register(user: UserRegister):
-    user_data = create_user(user.username, hash_password(user.password))
-    if not user_data:
-        return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            content=ErrorResponse(status="error", message="Tài khoản đã tồn tại", errors=[]).model_dump()
-        )
-    return JSONResponse(
-        status_code=status.HTTP_201_CREATED,
-        content=ApiResponse(status="success", message="Đăng ký thành công", data={"user_id": user_data["id"]}).model_dump()
-    )
+    us = create_user(user.username, hash_mat_khau(user.password))
+    if not us: return res_err("Tài khoản đã tồn tại", 400)
+    return res_ok({"user_id": us["id"]}, "Đăng ký thành công", 201)
 
 @router.post("/api/auth/login")
 def login(user: UserLogin):
-    user_data = get_user_by_username(user.username)
-    if not user_data or user_data.get("password_hash") != hash_password(user.password):
-        return JSONResponse(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            content=ErrorResponse(status="error", message="Sai tài khoản hoặc mật khẩu", errors=[]).model_dump()
-        )
-    return JSONResponse(
-        status_code=status.HTTP_200_OK,
-        content=ApiResponse(status="success", message="Đăng nhập thành công", data={"user_id": user_data["id"]}).model_dump()
-    )
+    us = get_user_by_username(user.username)
+    if not us or us.get("password_hash") != hash_mat_khau(user.password):
+        return res_err("Sai tài khoản hoặc mật khẩu", 401)
+    return res_ok({"user_id": us["id"]}, "Đăng nhập thành công")

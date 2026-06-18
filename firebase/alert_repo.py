@@ -1,5 +1,4 @@
 from .client import get_db
-import firebase_admin
 import time
 import logging
 

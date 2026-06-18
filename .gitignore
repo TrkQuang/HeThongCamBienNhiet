@@ -2,7 +2,6 @@
 venv/
 __pycache__/
 *.pyc
-iot/key_firebase_HeThongNhiet.json
 .env
 .vscode/
 .idea/

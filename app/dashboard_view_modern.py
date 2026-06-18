@@ -81,18 +81,23 @@ class DashboardView(ctk.CTkFrame):
     def __init__(self, parent, data_service: DataService):
         super().__init__(parent, fg_color=MAU_NEN_SANG)
         self._ds = data_service
-        
+
         self.nhiet_do_hien_tai = 0.0
         self.do_am = 0.0
+        self._last_temp = None  # For fade effect
 
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(0, weight=1)
 
         self.tao_noi_dung_chinh()
-        
+
         # Subscribe to centralized data service
         self._ds.subscribe(self.cap_nhat_giao_dien)
         self._ds.subscribe_measure_status(self.cap_nhat_trang_thai_do)
+
+        # Toast queue
+        self._toast_queue = []
+        self._toast_showing = False
 
     def tao_noi_dung_chinh(self):
         khung_chinh = ctk.CTkFrame(self, fg_color=MAU_NEN_SANG, corner_radius=0)
@@ -305,15 +310,26 @@ class DashboardView(ctk.CTkFrame):
         if status == "pending":
             self.nut_do_ngay.configure(state="disabled", text="⏳ Đang đo...")
             self.nhan_trang_thai_do.configure(text="Đang yêu cầu thiết bị đo...", text_color=MAU_CANH_BAO)
-        elif status == "success":
+        if status == "success":
             self.nut_do_ngay.configure(state="normal", text="📡 Đo ngay")
-            self.nhan_trang_thai_do.configure(text="✅ Đo thành công!", text_color=MAU_THANH_CONG)
+            self.nhan_trang_thai_do.configure(text="")
+            # Lấy dữ liệu mới nhất để hiển thị
+            temp = self._ds.current_data.get("temp", 0)
+            humidity = self._ds.current_data.get("humidity", 0)
+            self._them_toast_vao_hang_doi(
+                f"Đã đo dữ liệu thành công!\nNhiệt độ: {temp:.1f}°C\nĐộ ẩm: {humidity:.0f}%", "success"
+            )
         elif status == "timeout":
             self.nut_do_ngay.configure(state="normal", text="📡 Đo ngay")
-            self.nhan_trang_thai_do.configure(text="⚠️ Thiết bị không phản hồi", text_color=MAU_NGUY_HIEM)
+            self.nhan_trang_thai_do.configure(text="")
+            self._them_toast_vao_hang_doi(
+                "Không thể lấy dữ liệu từ thiết bị.\nVui lòng thử lại.", "error"
+            )
         else:
             self.nut_do_ngay.configure(state="normal", text="📡 Đo ngay")
             self.nhan_trang_thai_do.configure(text="", text_color=MAU_CHU_PHU)
+        self._show_toast("Đã đo dữ liệu thành công!\nNhiệt độ: {temp:.1f}°C\nĐộ ẩm: {humidity:.0f}%")
+        self._show_toast("Đã đo dữ liệu thành công!\nNhiệt độ: {temp:.1f}°C\nĐộ ẩm: {humidity:.0f}%")
 
     def cap_nhat_giao_dien(self):
         """Callback from DataService when data changes."""
@@ -431,5 +447,37 @@ class DashboardView(ctk.CTkFrame):
             thanh_tien_trinh.pack(side="left", fill="x", expand=True, padx=20)
             thanh_tien_trinh.set(min(nhiet_do / 45.0, 1.0))
 
+
+    def _them_toast_vao_hang_doi(self, message, m_type="info"):
+        self._toast_queue.append((message, m_type))
+        if not self._toast_showing:
+            self._hien_thi_toast_tiep_theo()
+
+    def _hien_thi_toast_tiep_theo(self):
+        if not self._toast_queue:
+            self._toast_showing = False
+            return
+
+        self._toast_showing = True
+        message, m_type = self._toast_queue.pop(0)
+
+        mau_nen = MAU_THANH_CONG
+        if m_type == "error":
+            mau_nen = MAU_NGUY_HIEM
+        elif m_type == "warning":
+            mau_nen = MAU_CANH_BAO
+
+        # Create a temporary label at the top right
+        toast_frame = ctk.CTkFrame(self, fg_color=mau_nen, corner_radius=8, border_width=1, border_color="#FFFFFF")
+        toast_frame.place(relx=0.98, rely=0.02, anchor="ne")
+
+        ctk.CTkLabel(toast_frame, text=message, text_color="white", font=FONT_NHAN, justify="left").pack(padx=15, pady=10)
+
+        self.after(4000, lambda: self._an_toast(toast_frame))
+
+    def _an_toast(self, toast_frame):
+        toast_frame.destroy()
+        # Process next in queue after a short delay
+        self.after(200, self._hien_thi_toast_tiep_theo)
 
 __all__ = ["DashboardView"]

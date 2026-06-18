@@ -8,6 +8,12 @@ from .api_client import ApiClient
 from .settings_store import AppSettings
 
 
+LOI_AI = {
+    "DANGER": "Nguy hiểm! Kiểm tra nguồn nhiệt ngay.",
+    "WARNING": "Cảnh báo ngưỡng. Kiểm tra làm mát.",
+}
+
+
 class DataService:
     def __init__(self, api_client: ApiClient, settings: AppSettings):
         self._api = api_client
@@ -19,12 +25,10 @@ class DataService:
         self.alerts: List[Dict[str, Any]] = []
         self.ai_suggestion: Optional[str] = None
         self.last_update = 0.0
-
         self.measure_status: Optional[str] = None
 
         self._subscribers: List[Callable[[], None]] = []
         self._lock = threading.Lock()
-
         self._data_listener = None
         self._settings_listener = None
 
@@ -32,26 +36,25 @@ class DataService:
             self._restart_listeners()
             self.refresh_all()
 
-    def subscribe(self, callback: Callable[[], None]):
+    def subscribe(self, callback: Callable[[], None]) -> None:
         if callback not in self._subscribers:
             self._subscribers.append(callback)
 
     def _notify(self):
-        for callback in self._subscribers:
+        for cb in self._subscribers:
             try:
-                callback()
-            except Exception as error:
-                print(f"Notify error: {error}")
+                cb()
+            except Exception as loi:
+                print(f"Notify error: {loi}")
 
     def update_settings(self, settings: AppSettings):
-        old_device_id = self._device_id
+        cu = self._device_id
         self._settings = settings
         self._device_id = settings.device_id
         self._api.update_base_url(settings.api_base_url)
 
-        if old_device_id != self._device_id:
+        if cu != self._device_id:
             self._restart_listeners()
-
         self.refresh_all()
 
     def _restart_listeners(self):
@@ -66,13 +69,13 @@ class DataService:
             self._settings_listener = db.reference(f"settings/{self._device_id}").listen(
                 lambda _event: self.refresh_all()
             )
-        except Exception as error:
-            print(f"Listener error: {error}")
+        except Exception as loi:
+            print(f"Listener error: {loi}")
 
-    def get_status(self, temp: float, hum: float) -> str:
+    def get_status(self, temp: float, do_am: float) -> str:
         if temp >= self._settings.danger_threshold:
             return "DANGER"
-        if temp >= self._settings.warning_threshold or hum >= self._settings.humidity_threshold:
+        if temp >= self._settings.warning_threshold or do_am >= self._settings.humidity_threshold:
             return "WARNING"
         return "NORMAL"
 
@@ -87,21 +90,21 @@ class DataService:
 
         with self._lock:
             try:
-                remote_settings = self._api.get_settings(self._device_id)
-                self._apply_settings(remote_settings)
+                remote = self._api.get_settings(self._device_id)
+                self._apply_settings(remote)
 
                 self.history = self._api.get_sensor_history(self._device_id, limit=30)
                 if self.history:
                     self.current_data = self.history[0]
-                    temp = float(self.current_data.get("temp", 0))
-                    hum = float(self.current_data.get("humidity", 0))
-                    self.ai_suggestion = self._gen_ai_text(self.get_status(temp, hum))
+                    nhiet_do = float(self.current_data.get("temp", 0))
+                    do_am = float(self.current_data.get("humidity", 0))
+                    self.ai_suggestion = self._gen_ai_text(self.get_status(nhiet_do, do_am))
 
                 self.alerts = self._api.get_alerts(self._device_id, limit=15)
                 self.last_update = time.time()
                 self._notify()
-            except Exception as error:
-                print(f"Fetch error: {error}")
+            except Exception as loi:
+                print(f"Fetch error: {loi}")
 
     def _apply_settings(self, data: Dict[str, Any]):
         if not data:
@@ -117,11 +120,7 @@ class DataService:
 
     @staticmethod
     def _gen_ai_text(status: str) -> str:
-        if status == "DANGER":
-            return "Nguy hiểm! Kiểm tra nguồn nhiệt ngay."
-        if status == "WARNING":
-            return "Cảnh báo ngưỡng. Kiểm tra làm mát."
-        return "Hệ thống ổn định."
+        return LOI_AI.get(status, "Hệ thống ổn định.")
 
     def request_immediate_measure(self):
         try:

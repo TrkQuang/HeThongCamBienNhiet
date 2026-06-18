@@ -3,6 +3,19 @@ from datetime import datetime
 from .data_service import DataService
 from .widgets import *
 
+
+BANG_TRANG_THAI = {
+    "NORMAL": "Bình thường",
+    "WARNING": "Vượt ngưỡng",
+    "DANGER": "Nguy hiểm!",
+}
+BANG_NGUY_CO = {
+    "NORMAL": "Không có nguy cơ",
+    "WARNING": "Nguy cơ cao",
+    "DANGER": "Nguy cơ cao",
+}
+
+
 class AlertView(ctk.CTkFrame):
     def __init__(self, parent, data_service: DataService):
         super().__init__(parent, fg_color=MAU_NEN_SANG)
@@ -70,7 +83,7 @@ class AlertView(ctk.CTkFrame):
         cot.grid_rowconfigure((0, 1), weight=1)
         cot.grid_columnconfigure(0, weight=1)
         self.khung_nguy_co = self.tao_danh_sach(cot, 0, "Cảnh báo nguy cơ")
-        self.khung_goi_y = self.tao_danh_sach(cot, 1, "AI Suggester")
+        self.khung_goi_y = self.tao_danh_sach(cot, 1, "Gợi ý khắc phục")
 
     def tao_danh_sach(self, cha, row, tieu_de):
         the = The(cha)
@@ -99,30 +112,33 @@ class AlertView(ctk.CTkFrame):
 
     def _render(self):
         if not self._ds.device_id: return
-        cur = self._ds.current_data
-        st = self._ds.settings
-        if cur:
-            t, h = float(cur.get("temp", 0)), float(cur.get("humidity", 0))
-            status = self._ds.get_status(t, h)
-            self.nhan_nhiet_do.configure(text=f"{t:.1f}°C", text_color=mau_theo_nhiet_do(t))
-            self.nhan_do_am.configure(text=f"{h:.0f}%")
+        du_lieu = self._ds.current_data
+        cai_dat = self._ds.settings
+        if du_lieu:
+            nhiet_do = float(du_lieu.get("temp", 0))
+            do_am = float(du_lieu.get("humidity", 0))
+            trang_thai = self._ds.get_status(nhiet_do, do_am)
+            mau = mau_theo_muc(trang_thai)
+
+            self.nhan_nhiet_do.configure(text=f"{nhiet_do:.1f}°C", text_color=mau_theo_nhiet_do(nhiet_do))
+            self.nhan_do_am.configure(text=f"{do_am:.0f}%")
             self.nhan_cam_bien.configure(text=self._ds.device_id)
-            self.nhan_nguong.configure(text=f"{st.warning_threshold:.1f}°C")
-            self.huy_hieu.configure(text=status, fg_color=mau_theo_muc(status))
-            msg = {"NORMAL": "Bình thường", "WARNING": "Vượt ngưỡng", "DANGER": "Nguy hiểm!"}[status]
-            self.nhan_ghi_chu.configure(text=msg)
-            self.cap_nhat_ds(self.khung_nguy_co, "Không có nguy cơ" if status == "NORMAL" else "Nguy cơ cao", mau_theo_muc(status))
-            self.cap_nhat_ds(self.khung_goi_y, self._ds.ai_suggestion or "Đang phân tích...", mau_theo_muc(status))
+            self.nhan_nguong.configure(text=f"{cai_dat.warning_threshold:.1f}°C")
+            self.huy_hieu.configure(text=trang_thai, fg_color=mau)
+            self.nhan_ghi_chu.configure(text=BANG_TRANG_THAI.get(trang_thai, "Đang chờ..."))
+            self.cap_nhat_ds(self.khung_nguy_co, BANG_NGUY_CO.get(trang_thai, "Không xác định"), mau)
+            self.cap_nhat_ds(self.khung_goi_y, self._ds.ai_suggestion or "Đang phân tích...", mau)
+
         for c in self.ls.winfo_children(): c.destroy()
-        for a in self._ds.alerts:
+        for canh_bao in self._ds.alerts:
             d = ctk.CTkFrame(self.ls, fg_color=MAU_THE_BG)
             d.pack(fill="x", pady=5)
-            ts = a.get("timestamp", "").split("T")[-1][:5]
-            lv = a.get("level", "WARNING").upper()
+            ts = canh_bao.get("timestamp", "").split("T")[-1][:5]
+            lv = canh_bao.get("level", "WARNING").upper()
             ctk.CTkLabel(d, text=ts, font=FONT_NOI_DUNG_BOLD, width=50).pack(side="left")
             HuyHieu(d, text=lv, mau=mau_theo_muc(lv)).pack(side="left", padx=10)
-            ctk.CTkLabel(d, text=a.get("warning", "Cảnh báo"), text_color=MAU_CHU_PHU).pack(side="left", padx=10)
-            ctk.CTkLabel(d, text=f"{a.get('temp', '--')}°C", font=FONT_NOI_DUNG_BOLD).pack(side="right", padx=10)
+            ctk.CTkLabel(d, text=canh_bao.get("warning", "Cảnh báo"), text_color=MAU_CHU_PHU).pack(side="left", padx=10)
+            ctk.CTkLabel(d, text=f"{canh_bao.get('temp', '--')}°C", font=FONT_NOI_DUNG_BOLD).pack(side="right", padx=10)
         self.nhan_thoi_gian.configure(text=f"Cập nhật: {datetime.now().strftime('%H:%M:%S')}")
 
 __all__ = ["AlertView"]

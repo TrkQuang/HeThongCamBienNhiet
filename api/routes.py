@@ -125,12 +125,21 @@ def lay_canh_bao(device_id: Optional[str] = None, limit: int = 50):
             loi=[{"message": "device_id is required"}],
         )
         return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content=phan_hoi.model_dump())
+
+    # ---------- fetch and validate alerts ----------
     try:
-        danh_sach = get_recent_alerts(device_id=device_id, limit=limit)
-        items = [
-            AlertOut.model_validate(item).model_dump(by_alias=True, mode="json")
-            for item in danh_sach
-        ]
+        raw_items = get_recent_alerts(device_id=device_id, limit=limit)
+        items = []
+        for item in raw_items:
+            if not isinstance(item, dict):
+                logger.warning(f"[routes] Skipping non‑dict alert entry: {item!r}")
+                continue
+            try:
+                validated = AlertOut.model_validate(item)
+                items.append(validated.model_dump(by_alias=True, mode="json"))
+            except Exception as val_err:
+                logger.error(f"[routes] Alert validation failed: {val_err!s} – item: {item!r}")
+                continue
     except Exception as loi:
         logger.exception("Loi lay canh bao: %s", loi)
         phan_hoi = ErrorResponse(

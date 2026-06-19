@@ -177,7 +177,7 @@ class AlertView(ctk.CTkFrame):
             hang = ctk.CTkFrame(khung, fg_color=MAU_THE_BG)
             hang.pack(fill="x", pady=4)
 
-            nhan = ctk.CTkLabel(hang, text=f"• {muc}", font=FONT_NOI_DUNG, text_color=MAU_CHU_PHU, wraplength=250, justify="left")
+            nhan = ctk.CTkLabel(hang, text=f"• {muc}", font=FONT_NOI_DUNG, text_color=mau, wraplength=250, justify="left")
             nhan.pack(side="left")
 
     def tao_the_lich_su(self, cha):
@@ -216,26 +216,53 @@ class AlertView(ctk.CTkFrame):
             self.nhan_nguong.configure(text=f"{settings.warning_threshold:.1f}°C")
 
         # 2. Update Alerts Status
-        if alerts:
-            latest = alerts[0]
-            level = latest.get("level") or "warning"
-            msg = latest.get("warning") or latest.get("message") or "Phát hiện bất thường"
-            self.huy_hieu.configure(text=str(level).upper(), fg_color=mau_theo_muc(level))
-            self.nhan_ghi_chu.configure(text=msg)
-            
-            # Risks list based on level
+        # Use current data to determine status, not historical alerts
+        current_status = "NORMAL"
+        current_temp = 0
+        current_hum = 0
+        
+        if current:
+            current_temp = float(current.get("temp", 0))
+            current_hum = float(current.get("humidity", 0))
+            current_status = self._ds._determine_status(current_temp, current_hum)
+        
+        # Update status indicator based on current status
+        self.huy_hieu.configure(text=current_status.upper(), fg_color=mau_theo_muc(current_status))
+        
+        # Set message based on current status
+        if current_status == "NORMAL":
+            self.nhan_ghi_chu.configure(text="Hệ thống hoạt động bình thường")
+        elif current_status == "WARNING":
+            self.nhan_ghi_chu.configure(text="Nhiệt độ đã vượt ngưỡng cảnh báo")
+        elif current_status == "DANGER":
+            self.nhan_ghi_chu.configure(text="Nhiệt độ đang ở mức nguy hiểm")
+        
+        # Update risk alerts based on current status, not historical alerts
+        if current_status == "NORMAL":
+            self.cap_nhat_danh_sach(self.khung_nguy_co, ["Không có nguy cơ"], MAU_THANH_CONG)
+        elif current_status == "WARNING":
             risks = ["Nhiệt độ vượt ngưỡng"]
-            if str(level).lower() in ["danger", "high"]:
-                risks.append("Nguy cơ cháy nổ thiết bị")
+            if current_hum >= settings.humidity_threshold:
+                risks.append("Độ ẩm vượt ngưỡng")
+            self.cap_nhat_danh_sach(self.khung_nguy_co, risks, MAU_CANH_BAO)
+        elif current_status == "DANGER":
+            risks = ["Nhiệt độ vượt ngưỡng nguy hiểm"]
+            if current_hum >= settings.humidity_threshold:
+                risks.append("Độ ẩm vượt ngưỡng")
+            risks.append("Nguy cơ cháy nổ thiết bị")
             self.cap_nhat_danh_sach(self.khung_nguy_co, risks, MAU_NGUY_HIEM)
         else:
-            self.huy_hieu.configure(text="NORMAL", fg_color=MAU_THANH_CONG)
-            self.nhan_ghi_chu.configure(text="Hệ thống hoạt động bình thường")
             self.cap_nhat_danh_sach(self.khung_nguy_co, ["Không có nguy cơ"], MAU_THANH_CONG)
 
         # 3. AI Suggestions
+        ai_color = MAU_CHINH
+        if current:
+            temp = float(current.get("temp", 0))
+            hum = float(current.get("humidity", 0))
+            status = self._ds._determine_status(temp, hum)
+            ai_color = mau_theo_muc(status)
         if ai_suggestion:
-            self.cap_nhat_danh_sach(self.khung_goi_y, [ai_suggestion], MAU_CHINH)
+            self.cap_nhat_danh_sach(self.khung_goi_y, [ai_suggestion], ai_color)
         else:
             self.cap_nhat_danh_sach(self.khung_goi_y, ["Đang thu thập dữ liệu phân tích..."], MAU_CHU_PHU)
 

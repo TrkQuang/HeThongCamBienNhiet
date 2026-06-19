@@ -72,21 +72,6 @@ class AiSuggestionRequest(BaseModel):
     nguong: float = Field(alias="threshold")
 
 
-class AiSuggestionResponse(BaseModel):
-    """Phản hồi gợi ý AI."""
-
-    model_config = ConfigDict(populate_by_name=True)
-
-    goi_y: str = Field(alias="suggestion")
-
-class UserLogin(BaseModel):
-    username: str
-    password: str
-
-class UserRegister(BaseModel):
-    username: str
-    password: str
-
 class DeviceLink(BaseModel):
     device_id: str
     name: str

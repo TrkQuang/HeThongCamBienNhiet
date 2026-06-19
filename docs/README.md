@@ -1,23 +1,19 @@
-# docs/ - Tài liệu
+# Tài liệu Hệ thống Giám sát Nhiệt độ
 
-## Mục đích
+## Tổng quan
 
-Tài liệu kiến trúc, API, hướng dẫn người dùng.
+Thư mục này chứa tất cả tài liệu hướng dẫn, đặc tả và hỗ trợ cho hệ thống.
 
-## Chứa gì
+## Danh sách tài liệu
 
-- architecture.md
-- api_spec.md
-- user_guide.md
-- troubleshooting.md
+- **[architecture.md](architecture.md)** → Mô tả kiến trúc hệ thống, luồng dữ liệu, thành phần chính
+- **[api_spec.md](api_spec.md)** → Đặc tả API chi tiết, request/response schemas
+- **[user_guide.md](user_guide.md)** → Hướng dẫn cài đặt, cấu hình và sử dụng
+- **[troubleshooting.md](troubleshooting.md)** → Xử lý lỗi thường gặp và giải pháp
 
-## Danh sách file
+## Cập nhật tài liệu
 
-- architecture.md (doc): Mô tả kiến trúc tổng thể và luồng dữ liệu.
-- api_spec.md (doc): Đặc tả API, endpoint, payload.
-- user_guide.md (doc): Hướng dẫn sử dụng cho người dùng.
-- troubleshooting.md (doc): Các lỗi thường gặp và cách xử lý.
-
-## Ví dụ sử dụng
-
-Đọc `api_spec.md` để thống nhất format payload.
+Khi thay đổi hệ thống, vui lòng cập nhật các tài liệu tương ứng:
+- Thêm endpoint mới → cập nhật api_spec.md
+- Thay đổi luồng xử lý → cập nhật architecture.md
+- Phát sinh lỗi mới → bổ sung vào troubleshooting.md

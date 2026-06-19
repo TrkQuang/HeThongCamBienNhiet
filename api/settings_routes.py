@@ -1,35 +1,18 @@
-from fastapi import APIRouter, status
-from fastapi.responses import JSONResponse
-
+from fastapi import APIRouter
 from firebase.settings_repo import get_settings, update_settings
-from .schemas import DeviceSettings, ApiResponse, ErrorResponse
+from .schemas import DeviceSettings
+from .utils import res_err, res_ok
 
 router = APIRouter()
 
 @router.get("/api/settings/{device_id}")
-def api_get_settings(device_id: str):
-    data = get_settings(device_id)
-    if not data:
-        return JSONResponse(
-            status_code=status.HTTP_404_NOT_FOUND,
-            content=ErrorResponse(status="error", message="Không tìm thấy cấu hình", errors=[]).model_dump()
-        )
-    return JSONResponse(
-        status_code=status.HTTP_200_OK,
-        content=ApiResponse(status="success", message="OK", data=data).model_dump()
-    )
+def get_device_settings(device_id: str):
+    cai_dat = get_settings(device_id)
+    if cai_dat is None: return res_err("Settings not found", 404)
+    return res_ok(cai_dat)
 
 @router.put("/api/settings/{device_id}")
-def api_put_settings(device_id: str, settings: DeviceSettings):
-    updates = settings.model_dump(exclude_unset=True)
-    if not updates:
-        return JSONResponse(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            content=ErrorResponse(status="error", message="Không có dữ liệu cập nhật", errors=[]).model_dump()
-        )
-    
-    updated_data = update_settings(device_id, updates)
-    return JSONResponse(
-        status_code=status.HTTP_200_OK,
-        content=ApiResponse(status="success", message="Đã cập nhật cấu hình", data=updated_data).model_dump()
-    )
+def update_device_settings(device_id: str, settings: DeviceSettings):
+    cap_nhat = settings.model_dump(exclude_unset=True)
+    if not cap_nhat: return res_err("No fields provided for update")
+    return res_ok(update_settings(device_id, cap_nhat), "Settings updated")

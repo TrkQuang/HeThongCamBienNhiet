@@ -5,12 +5,8 @@ def link_device(user_id: str, device_id: str, name: str) -> dict:
     """Links a device to a user."""
     db = get_db()
     
-    # Check if device is already linked
     device_ref = db.reference(f"devices/{device_id}")
-    existing = device_ref.get()
     
-    # If device exists and is linked to another user, we might want to prevent or allow transfer.
-    # For now, let's allow claiming or overwriting if they know the ID.
     device_data = {
         "device_id": device_id,
         "user_id": user_id,
@@ -19,10 +15,8 @@ def link_device(user_id: str, device_id: str, name: str) -> dict:
     }
     device_ref.set(device_data)
     
-    # Also link to user's devices
     db.reference(f"users/{user_id}/devices/{device_id}").set(True)
     
-    # Init default settings if not exist
     settings_ref = db.reference(f"settings/{device_id}")
     if not settings_ref.get():
         settings_ref.set({
@@ -50,8 +44,6 @@ def get_user_devices(user_id: str) -> list:
 
 def get_device(device_id: str) -> dict:
     db = get_db()
-    # Check existence by attempting to pull the data
-    # (Since we cannot use limit_to_first/last)
     data = db.reference(f"sensor_data/{device_id}").get()
     if data:
         return {"exists": True, "device_id": device_id}

@@ -1,5 +1,4 @@
 from .client import get_db
-import datetime
 
 def save_reading(device_id: str, reading_data: dict) -> str:
     db = get_db()

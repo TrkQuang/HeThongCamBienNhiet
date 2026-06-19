@@ -1,6 +1,4 @@
-"""
-Chuong trinh chinh cho He Thong Quan Ly Nhiet Do
-"""
+"""Entry point cho giao diện desktop."""
 
 from .main_window import MainWindow
 
@@ -12,5 +10,3 @@ def chay_ung_dung():
 
 if __name__ == "__main__":
     chay_ung_dung()
-
-

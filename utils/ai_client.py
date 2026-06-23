@@ -1,32 +1,35 @@
 import os
+from dotenv import load_dotenv
+import google.generativeai as genai
 from typing import Optional
 
-import requests
+
+load_dotenv()
+
+def _get_gemini():
+    api_key = os.getenv("GEMINI_API_KEY", "").strip()
+    if not api_key:
+        raise ValueError("GEMINI_API_KEY not set")
+
+    genai.configure(api_key=api_key)
+    return genai.GenerativeModel("gemini-2.5-flash")
 
 
 def goi_ai(prompt: str) -> Optional[str]:
-    """Gọi dịch vụ AI nếu đã cấu hình, nếu không thì trả về None."""
-    api_url = os.getenv("AI_API_URL", "").strip()
-    api_key = os.getenv("AI_API_KEY", "").strip()
-    timeout = float(os.getenv("AI_TIMEOUT", "10"))
-
-    if not api_url:
-        return None
-
-    headers = {"Content-Type": "application/json"}
-    if api_key:
-        headers["Authorization"] = f"Bearer {api_key}"
-
-    payload = {
-        "prompt": prompt,
-        "max_tokens": 120,
-        "temperature": 0.3,
-    }
-
     try:
-        resp = requests.post(api_url, json=payload, headers=headers, timeout=timeout)
-        resp.raise_for_status()
-        data = resp.json()
-        return data.get("text") or data.get("result")
-    except Exception:
+        model = _get_gemini()
+
+        resp = model.generate_content(
+    "Bạn là chuyên gia IoT về hệ thống giám sát nhiệt độ và độ ẩm công nghiệp. "
+    "Trả lời ngắn gọn bằng tiếng Việt, mỗi gợi ý một dòng, tập trung hành động khắc phục.\n\n"
+    f"Dữ liệu: {prompt}")
+
+        if not resp or not resp.text:
+            print("[AI] Empty response")
+            return None
+
+        return resp.text.strip()
+
+    except Exception as e:
+        print(f"[AI GEMINI ERROR] {e}")
         return None

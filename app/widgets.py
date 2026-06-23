@@ -30,6 +30,14 @@ def mau_theo_nhiet_do(nhiet_do):
     if nhiet_do < 35: return "#FF9800"
     return "#F44336"
 
+def mau_theo_nguong(temp: float, warn: float, danger: float) -> str:
+    """Threshold-based color: green / yellow / red."""
+    if temp >= danger:
+        return "#D50000"  # RED
+    if temp >= warn:
+        return "#FFB300"  # YELLOW
+    return "#00C853"  # GREEN
+
 def mau_theo_muc(muc):
     muc = muc.lower()
     if muc in {"danger", "high", "nguy hiem", "nguy hiểm"}: return MAU_NGUY_HIEM

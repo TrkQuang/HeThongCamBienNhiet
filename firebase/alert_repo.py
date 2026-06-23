@@ -5,9 +5,12 @@ import logging
 def save_alert(device_id: str, alert_data: dict) -> str:
     db = get_db()
     ref = db.reference(f"alerts/{device_id}")
-    # Ensure timestamp fields exist
-    alert_data.setdefault("timestamp", time.strftime("%Y-%m-%dT%H:%M:%S", time.gmtime()))
-    alert_data.setdefault("created_at_unix", int(time.time()))
+    # Use Vietnam timezone GMT+7
+    from datetime import datetime, timezone, timedelta
+    vn_tz = timezone(timedelta(hours=7))
+    now_vn = datetime.now(vn_tz)
+    alert_data.setdefault("timestamp", now_vn.strftime("%Y-%m-%dT%H:%M:%S"))
+    alert_data.setdefault("created_at_unix", int(now_vn.timestamp()))
     new_alert_ref = ref.push()
     new_alert_ref.set(alert_data)
     return new_alert_ref.key

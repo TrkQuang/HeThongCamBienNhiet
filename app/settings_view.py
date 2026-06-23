@@ -20,7 +20,6 @@ class SettingsView(ctk.CTkFrame):
         self.nguong_nguy_hiem = tk.DoubleVar(value=self._cau_hinh.danger_threshold)
         self.nguong_do_am = tk.DoubleVar(value=self._cau_hinh.humidity_threshold)
         self.tan_suat_lay_mau = tk.IntVar(value=max(int(self._cau_hinh.refresh_ms / 60000), 1))
-        self.api_url = tk.StringVar(value=self._cau_hinh.api_base_url)
         self.bat_am_thanh = tk.BooleanVar(value=self._cau_hinh.sound_alert)
         self.gui_email = tk.BooleanVar(value=self._cau_hinh.email_alert)
 
@@ -130,11 +129,6 @@ class SettingsView(ctk.CTkFrame):
         khung.pack(fill="both", expand=True, padx=20, pady=20)
         ctk.CTkLabel(khung, text="Kết nối và thông báo", font=FONT_TIEU_DE_THE, text_color=MAU_CHU_CHINH).pack(anchor="w", pady=(0, 15))
 
-        khung_api = ctk.CTkFrame(khung, fg_color=MAU_THE_BG)
-        khung_api.pack(fill="x", pady=10)
-        ctk.CTkLabel(khung_api, text="API URL", font=FONT_NOI_DUNG, text_color=MAU_CHU_PHU).pack(anchor="w")
-        ctk.CTkEntry(khung_api, textvariable=self.api_url, border_color=MAU_DUONG_BIEN).pack(fill="x", pady=(6, 0))
-
         ctk.CTkFrame(khung, height=1, fg_color=MAU_DUONG_BIEN).pack(fill="x", pady=15)
         for ten_cai_dat, bien_cai_dat in [("Bật cảnh báo âm thanh", self.bat_am_thanh), ("Gửi email khi nguy hiểm", self.gui_email)]:
             khung_switch = ctk.CTkFrame(khung, fg_color=MAU_THE_BG)
@@ -146,7 +140,6 @@ class SettingsView(ctk.CTkFrame):
     # Lưu ngưỡng cảnh báo và cấu hình vào bộ nhớ/app service
     # ==================================================
     def luu(self):
-        self._cau_hinh.api_base_url = self.api_url.get().strip().rstrip("/")
         self._cau_hinh.warning_threshold = float(self.nguong_canh_bao.get())
         self._cau_hinh.danger_threshold = float(self.nguong_nguy_hiem.get())
         self._cau_hinh.humidity_threshold = float(self.nguong_do_am.get())
@@ -162,7 +155,6 @@ class SettingsView(ctk.CTkFrame):
         self.nguong_nguy_hiem.set(self._cau_hinh.danger_threshold)
         self.nguong_do_am.set(self._cau_hinh.humidity_threshold)
         self.tan_suat_lay_mau.set(max(int(self._cau_hinh.refresh_ms / 60000), 1))
-        self.api_url.set(self._cau_hinh.api_base_url)
         self.bat_am_thanh.set(self._cau_hinh.sound_alert)
         self.gui_email.set(self._cau_hinh.email_alert)
 

@@ -20,7 +20,14 @@ class ApiClient:
         return resp.get("du_lieu") or resp.get("data") or {}
 
     def get_device(self, device_id: str) -> Dict[str, Any]:
-        return self._get(f"/api/devices/{device_id}")
+        raw = self._get(f"/api/devices/{device_id}")
+        # API wraps response in {"ok": True, "data": {...}, "message": "OK"}
+        # Unwrap to get the inner payload (which has {exists, device_id})
+        return self._payload(raw)
+
+    def get_devices(self) -> List[Dict[str, Any]]:
+        """Fetch all linked devices from API."""
+        return self._items(self._get("/api/devices"))
 
     def get_sensor_history(self, device_id: str, limit: int = 50) -> List[Dict[str, Any]]:
         return self._items(self._get("/api/du-lieu-nhiet", {"device_id": device_id, "limit": limit}))

@@ -4,13 +4,13 @@
   "devices": [
     {
       "id": "1109010",
-      "name": "room A"
+      "name": "phòng lạnh"
     }
   ],
-  "warning_threshold": 38.6,
-  "danger_threshold": 43.6,
+  "warning_threshold": 33.0,
+  "danger_threshold": 46.0,
   "humidity_threshold": 84.6,
   "refresh_ms": 300000,
-  "sound_alert": true,
+  "sound_alert": false,
   "email_alert": false
 }
